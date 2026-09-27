@@ -7,6 +7,18 @@
   <img src="https://raw.githubusercontent.com/PasarGuard/subscription-template/refs/heads/main/screenshots/fa.png" alt="Persian UI" width="30%">
 </p>
 
+## پیش‌نمایش شارژ اضطراری و آموزش اتصال
+
+<p align="center">
+  <img src="screenshots/emergency-charge-fa.png" alt="شارژ اضطراری" width="70%">
+</p>
+<p align="center">
+  <img src="screenshots/tutorials-fa.png" alt="آموزش اتصال" width="70%">
+  <img src="screenshots/mobile-fa.png" alt="نمای موبایل" width="22%">
+</p>
+
+پیش‌نمایش تعاملی با اطلاعات نمونه: فایل [`preview/index.html`](preview/index.html) را دانلود کنید و در مرورگر باز کنید. دکمه شارژ اضطراری، انتخاب سیستم‌عامل و آموزش‌ها در آن کار می‌کنند.
+
 ## امکانات
 
 - زبان‌ها: `en`، `fa`، `zh`، `ru`

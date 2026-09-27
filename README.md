@@ -7,6 +7,18 @@ Responsive subscription page template for PasarGuard.
   <img src="https://raw.githubusercontent.com/PasarGuard/subscription-template/refs/heads/main/screenshots/fa.png" alt="Persian UI" width="30%">
 </p>
 
+## Emergency Charge & Setup Guide Preview
+
+<p align="center">
+  <img src="screenshots/emergency-charge-fa.png" alt="Emergency charge" width="70%">
+</p>
+<p align="center">
+  <img src="screenshots/tutorials-fa.png" alt="Setup guide" width="70%">
+  <img src="screenshots/mobile-fa.png" alt="Mobile" width="22%">
+</p>
+
+Interactive demo with sample data: download [`preview/index.html`](preview/index.html) and open it in a browser.
+
 ## Features
 
 - Languages: `en`, `fa`, `zh`, `ru`
