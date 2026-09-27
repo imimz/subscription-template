@@ -128,5 +128,47 @@
       "androidtv": "Android TV",
       "other": "Other"
     }
+  },
+  "emergencyCharge": {
+    "title": "Emergency charge",
+    "description": "Your traffic has run out or is about to. Get {{amount}} of free traffic with an emergency charge so you can renew your subscription through the Telegram bot. It can be used once per purchase period.",
+    "amount": "{{value}} MB",
+    "button": "Get {{amount}} free",
+    "chargedTitle": "Emergency charge activated",
+    "chargedDescription": "{{amount}} was added to your subscription. Now renew your subscription through the Telegram bot.",
+    "success": "{{amount}} was added to your subscription",
+    "goToBot": "Buy from the Telegram bot",
+    "errors": {
+      "already_used": "The emergency charge was already used this period. Please renew your subscription through the Telegram bot.",
+      "not_eligible": "This subscription is not eligible for an emergency charge.",
+      "not_needed": "Your subscription still has traffic left.",
+      "invalid_token": "Invalid subscription.",
+      "rate_limited": "Too many requests; please try again shortly.",
+      "network": "Could not reach the server; please try again.",
+      "unknown": "Something went wrong; please try again."
+    }
+  },
+  "tutorials": {
+    "sectionTitle": "Apps & setup guide",
+    "appsFor": "{{platform}} apps",
+    "appsHint": "Click an app's card to see its setup guide",
+    "recommended": "Recommended",
+    "viewing": "Viewing guide",
+    "viewTutorial": "View setup guide",
+    "github": "GitHub",
+    "download": {
+      "apk": "Download APK",
+      "appStore": "App Store",
+      "googlePlay": "Google Play",
+      "direct": "Download"
+    },
+    "tutorialFor": "How to use {{app}}",
+    "copyStep": {
+      "title": "Copy the subscription link",
+      "body": "Copy your subscription link with the button below.",
+      "bodyWithImport": "Copy your subscription link with the button below. If {{app}} is already installed, use the \"Add automatically\" button to import the link directly and skip the next step.",
+      "copy": "Copy subscription link",
+      "import": "Add automatically to {{app}}"
+    }
   }
 }

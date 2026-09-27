@@ -23,3 +23,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Emergency charge service
+emergency-charge/.env
+emergency-charge/*.db
