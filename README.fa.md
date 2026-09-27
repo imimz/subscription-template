@@ -7,6 +7,18 @@
   <img src="https://raw.githubusercontent.com/PasarGuard/subscription-template/refs/heads/main/screenshots/fa.png" alt="Persian UI" width="30%">
 </p>
 
+## پیش‌نمایش شارژ اضطراری و آموزش اتصال
+
+<p align="center">
+  <img src="screenshots/emergency-charge-fa.png" alt="شارژ اضطراری" width="70%">
+</p>
+<p align="center">
+  <img src="screenshots/tutorials-fa.png" alt="آموزش اتصال" width="70%">
+  <img src="screenshots/mobile-fa.png" alt="نمای موبایل" width="22%">
+</p>
+
+پیش‌نمایش تعاملی با اطلاعات نمونه: فایل [`preview/index.html`](preview/index.html) را دانلود کنید و در مرورگر باز کنید. دکمه شارژ اضطراری، انتخاب سیستم‌عامل و آموزش‌ها در آن کار می‌کنند.
+
 ## امکانات
 
 - زبان‌ها: `en`، `fa`، `zh`، `ru`
@@ -16,6 +28,8 @@
 - QR برای لینک‌های اتصال
 - کپی لینک و کانفیگ با یک کلیک، با امکان کپی Base64 فقط در مودال QR
 - لینک‌های WireGuard به صورت کانفیگ اصلی هم قابل کپی و دانلود با فرمت `.conf` هستند
+- بخش آموزش اتصال: انتخاب سیستم‌عامل، کارت برنامه‌ها با لینک دانلود/گیت‌هاب و آموزش مرحله‌به‌مرحله (قابل ویرایش در `src/constants/tutorials.ts`)
+- [شارژ اضطراری](#emergency-charge): اضافه کردن حجم رایگان برای کاربری که حجمش تمام شده تا بتواند از ربات تلگرام خرید کند
 - [شخصی‌سازی ظاهر](#appearance-customization)
 
 ## سازگاری
@@ -85,6 +99,19 @@ sudo cp dist/index.html /var/lib/pasarguard/templates/subscription/index.html
 VITE_PRIMARY_COLOR_LIGHT=oklch(0.48 0.11 250)
 VITE_PRIMARY_COLOR_DARK=oklch(0.60 0.12 250)
 VITE_BORDER_RADIUS=0.65rem
+```
+
+<a id="emergency-charge"></a>
+
+## شارژ اضطراری
+
+وقتی حجم کاربر تمام یا کم شده باشد، کارتی با دکمه «دریافت ۵۰۰ مگابایت رایگان» نمایش داده می‌شود. این قابلیت به یک سرویس کوچک کنار پنل نیاز دارد. آموزش نصب آن در [emergency-charge/README.md](emergency-charge/README.md) است. بعد از نصب سرویس، این مقادیر را در `.env` قرار دهید و دوباره build بگیرید:
+
+```dotenv
+VITE_EMERGENCY_CHARGE_URL=https://panel.example.com:8765/emergency-charge
+VITE_EMERGENCY_CHARGE_MB=500
+VITE_EMERGENCY_CHARGE_THRESHOLD_MB=500
+VITE_TELEGRAM_BOT_URL=https://t.me/your_bot
 ```
 
 ## زبان‌های دیگر
