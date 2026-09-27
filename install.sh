@@ -3,18 +3,20 @@ set -euo pipefail
 
 LANG_CODE="fa"
 VERSION="latest"
+REPO="imimz/subscription-template"
 DEST_DIR="/var/lib/pasarguard/templates/subscription"
 DEST_FILE="${DEST_DIR}/index.html"
 ENV_FILE="/opt/pasarguard/.env"
 
 usage() {
   cat <<'EOF'
-Usage: install.sh [--lang en|fa|zh|ru] [--version latest|<tag>]
+Usage: install.sh [--lang en|fa|zh|ru] [--version latest|<tag>] [--repo <owner>/<repo>]
 
 Examples:
   install.sh
   install.sh --lang en
-  install.sh --lang fa --version v2.0.0
+  install.sh --lang fa --version v2.3.0
+  install.sh --repo PasarGuard/subscription-template   # original template
 EOF
 }
 
@@ -34,6 +36,14 @@ while [[ $# -gt 0 ]]; do
         exit 1
       fi
       VERSION="$2"
+      shift 2
+      ;;
+    --repo)
+      if [[ $# -lt 2 ]]; then
+        echo "Error: --repo needs a value (<owner>/<repo>)." >&2
+        exit 1
+      fi
+      REPO="$2"
       shift 2
       ;;
     -h|--help)
@@ -66,21 +76,37 @@ if [[ "${VERSION}" != "latest" ]]; then
   RELEASE_PATH="download/${VERSION}"
 fi
 
-URL="https://github.com/PasarGuard/subscription-template/releases/${RELEASE_PATH}/${LANG_CODE}.html"
+URL="https://github.com/${REPO}/releases/${RELEASE_PATH}/${LANG_CODE}.html"
 if [[ "${LANG_CODE}" == "fa" ]]; then
-  URL="https://github.com/PasarGuard/subscription-template/releases/${RELEASE_PATH}/index.html"
+  URL="https://github.com/${REPO}/releases/${RELEASE_PATH}/index.html"
 fi
 
 mkdir -p "${DEST_DIR}"
 
-if command -v wget >/dev/null 2>&1; then
-  wget -q -O "${DEST_FILE}" "${URL}"
-elif command -v curl >/dev/null 2>&1; then
-  curl -fsSL "${URL}" -o "${DEST_FILE}"
-else
-  echo "Error: neither wget nor curl is installed." >&2
+# Keep the current template so it can be restored with: cp index.html.bak index.html
+if [[ -f "${DEST_FILE}" ]]; then
+  cp "${DEST_FILE}" "${DEST_FILE}.bak"
+  echo "Backed up the current template to ${DEST_FILE}.bak"
+fi
+
+download() {
+  if command -v wget >/dev/null 2>&1; then
+    wget -q -O "${DEST_FILE}.tmp" "${URL}"
+  elif command -v curl >/dev/null 2>&1; then
+    curl -fsSL "${URL}" -o "${DEST_FILE}.tmp"
+  else
+    echo "Error: neither wget nor curl is installed." >&2
+    exit 1
+  fi
+}
+
+if ! download; then
+  rm -f "${DEST_FILE}.tmp"
+  echo "Error: could not download ${URL}" >&2
+  echo "Check that ${REPO} has a published release with the template files. The current template was left unchanged." >&2
   exit 1
 fi
+mv "${DEST_FILE}.tmp" "${DEST_FILE}"
 
 mkdir -p "$(dirname "${ENV_FILE}")"
 touch "${ENV_FILE}"
@@ -99,8 +125,8 @@ fi
 
 if command -v pasarguard >/dev/null 2>&1; then
   pasarguard restart
-  echo "Installed template (${LANG_CODE}, ${VERSION}) and restarted PasarGuard."
+  echo "Installed template from ${REPO} (${LANG_CODE}, ${VERSION}) and restarted PasarGuard."
 else
-  echo "Installed template (${LANG_CODE}, ${VERSION}) at ${DEST_FILE}."
+  echo "Installed template from ${REPO} (${LANG_CODE}, ${VERSION}) at ${DEST_FILE}."
   echo "pasarguard command not found, restart service manually."
 fi
