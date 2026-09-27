@@ -128,47 +128,5 @@
       "androidtv": "Android TV",
       "other": "其他"
     }
-  },
-  "emergencyCharge": {
-    "title": "紧急充值",
-    "description": "您的流量已用完或即将用完。使用紧急充值可免费获得 {{amount}} 流量，以便通过 Telegram 机器人续费。每个购买周期仅可使用一次。",
-    "amount": "{{value}} MB",
-    "button": "免费领取 {{amount}}",
-    "chargedTitle": "紧急充值已生效",
-    "chargedDescription": "已为您的订阅增加 {{amount}}。请通过 Telegram 机器人续费。",
-    "success": "已为您的订阅增加 {{amount}}",
-    "goToBot": "前往 Telegram 机器人购买",
-    "errors": {
-      "already_used": "本周期已使用过紧急充值。请通过 Telegram 机器人续费。",
-      "not_eligible": "此订阅不支持紧急充值。",
-      "not_needed": "您的订阅仍有剩余流量。",
-      "invalid_token": "订阅无效。",
-      "rate_limited": "请求过多，请稍后再试。",
-      "network": "无法连接服务器，请重试。",
-      "unknown": "出现错误，请重试。"
-    }
-  },
-  "tutorials": {
-    "sectionTitle": "应用与使用教程",
-    "appsFor": "{{platform}} 应用",
-    "appsHint": "点击应用卡片查看使用教程",
-    "recommended": "推荐",
-    "viewing": "正在查看教程",
-    "viewTutorial": "查看使用教程",
-    "github": "GitHub",
-    "download": {
-      "apk": "下载 APK",
-      "appStore": "App Store",
-      "googlePlay": "Google Play",
-      "direct": "下载"
-    },
-    "tutorialFor": "{{app}} 使用教程",
-    "copyStep": {
-      "title": "复制订阅链接",
-      "body": "使用下方按钮复制您的订阅链接。",
-      "bodyWithImport": "使用下方按钮复制您的订阅链接。如果已安装 {{app}}，可点击“自动添加”直接导入并跳过下一步。",
-      "copy": "复制订阅链接",
-      "import": "自动添加到 {{app}}"
-    }
   }
 }

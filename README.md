@@ -7,18 +7,6 @@ Responsive subscription page template for PasarGuard.
   <img src="https://raw.githubusercontent.com/PasarGuard/subscription-template/refs/heads/main/screenshots/fa.png" alt="Persian UI" width="30%">
 </p>
 
-## Emergency Charge & Setup Guide Preview
-
-<p align="center">
-  <img src="screenshots/emergency-charge-fa.png" alt="Emergency charge" width="70%">
-</p>
-<p align="center">
-  <img src="screenshots/tutorials-fa.png" alt="Setup guide" width="70%">
-  <img src="screenshots/mobile-fa.png" alt="Mobile" width="22%">
-</p>
-
-Interactive demo with sample data: download [`preview/index.html`](preview/index.html) and open it in a browser.
-
 ## Features
 
 - Languages: `en`, `fa`, `zh`, `ru`
@@ -28,8 +16,6 @@ Interactive demo with sample data: download [`preview/index.html`](preview/index
 - QR code for connection links
 - Copy links/configs in one click, with Base64 copy available only in the QR modal
 - WireGuard links can be copied as native config or downloaded as `.conf`
-- Setup guide section: platform picker, app cards with download/GitHub links and step-by-step tutorials (edit `src/constants/tutorials.ts`)
-- [Emergency charge](#emergency-charge): lets a user who ran out of traffic claim free traffic once per period to renew through your Telegram bot
 - [Appearance customization](#appearance-customization)
 
 ## Compatibility
@@ -99,19 +85,6 @@ Set these in `.env` and build again:
 VITE_PRIMARY_COLOR_LIGHT=oklch(0.48 0.11 250)
 VITE_PRIMARY_COLOR_DARK=oklch(0.60 0.12 250)
 VITE_BORDER_RADIUS=0.65rem
-```
-
-<a id="emergency-charge"></a>
-
-## Emergency Charge
-
-When a user is out of (or low on) traffic, the page shows an emergency charge card. It needs a small service running next to the panel; see [emergency-charge/README.md](emergency-charge/README.md). Then set these in `.env` and build again:
-
-```dotenv
-VITE_EMERGENCY_CHARGE_URL=https://panel.example.com:8765/emergency-charge
-VITE_EMERGENCY_CHARGE_MB=500
-VITE_EMERGENCY_CHARGE_THRESHOLD_MB=500
-VITE_TELEGRAM_BOT_URL=https://t.me/your_bot
 ```
 
 ## Other Languages

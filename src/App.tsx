@@ -9,8 +9,7 @@ import { OnlineBadge } from '@/components/online-badge';
 import { TrafficChart } from '@/components/traffic-chart';
 import { ConnectionLinks } from '@/components/connection-links';
 import { ProminentSubscriptionLink } from '@/components/prominent-subscription-link';
-import { AppTutorials } from '@/components/app-tutorials';
-import { EmergencyCharge } from '@/components/emergency-charge';
+import { AppsList } from '@/components/AppsList';
 import { formatRelativeExpiry, formatDate } from '@/lib/dateFormatter';
 import { RefreshCcw, Bell } from 'lucide-react';
 import { useDir } from '@/hooks/useDir';
@@ -328,14 +327,6 @@ function App() {
               </div>
             )}
 
-            {/* Emergency Charge */}
-            <EmergencyCharge
-              status={normalizedStatus}
-              dataLimit={effectiveData.data_limit}
-              usedTraffic={effectiveData.used_traffic}
-              onCharged={refresh}
-            />
-
             {/* Status Hero Card */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
               {/* Main Status Card */}
@@ -558,16 +549,16 @@ function App() {
             <div className="flex items-center gap-4 animate-fadeIn">
               <div className="flex-1 h-px bg-gradient-to-r from-transparent via-border to-transparent"></div>
               <div className="px-4 py-2 rounded-full bg-gradient-to-r from-primary/10 to-primary/5 text-sm font-medium text-primary border border-primary/20 hover:border-primary/30 transition-all duration-300 hover:scale-105">
-                <span className="text-sm me-2 animate-bounce">📱</span>
-                {t('tutorials.sectionTitle')}
+                <span className="text-sm mr-2 animate-bounce">📱</span>
+                {t('apps.title')}
               </div>
               <div className="flex-1 h-px bg-gradient-to-r from-transparent via-border to-transparent"></div>
             </div>
           </div>
 
-          {/* Apps & tutorials section under chart and configs */}
+          {/* Apps section under chart and configs */}
           <div className="mt-6 sm:mt-8">
-            <AppTutorials />
+            <AppsList />
           </div>
         </div>
       </div>
