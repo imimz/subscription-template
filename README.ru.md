@@ -1,10 +1,12 @@
 # Шаблон подписки PasarGuard
 
-Адаптивный шаблон страницы подписки для PasarGuard.
+Адаптивный шаблон страницы подписки для PasarGuard на основе официального [PasarGuard/subscription-template](https://github.com/PasarGuard/subscription-template).
+
+> Эта версия добавляет **экстренное пополнение** трафика и **инструкции по подключению** для каждой платформы. Полная документация, включая настройку экстренного пополнения и переход с оригинального шаблона, находится в [README.md](README.md) (на английском).
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/PasarGuard/subscription-template/refs/heads/main/screenshots/en.png" alt="English UI" width="40%">
-  <img src="https://raw.githubusercontent.com/PasarGuard/subscription-template/refs/heads/main/screenshots/fa.png" alt="Persian UI" width="30%">
+  <img src="screenshots/en.png" alt="English UI" width="40%">
+  <img src="screenshots/fa.png" alt="Persian UI" width="30%">
 </p>
 
 ## Возможности
@@ -30,7 +32,7 @@
 Запустите скрипт установки (выберите язык по умолчанию):
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/PasarGuard/subscription-template/main/install.sh | sudo bash -s -- --lang ru
+curl -fsSL https://raw.githubusercontent.com/imimz/subscription-template/main/install.sh | sudo bash -s -- --lang ru
 ```
 
 Поддерживаемые значения `--lang`: `en`, `fa`, `zh`, `ru`
@@ -44,7 +46,7 @@ curl -fsSL https://raw.githubusercontent.com/PasarGuard/subscription-template/ma
 ```sh
 sudo mkdir -p /var/lib/pasarguard/templates/subscription
 sudo wget -O /var/lib/pasarguard/templates/subscription/index.html \
-https://github.com/PasarGuard/subscription-template/releases/latest/download/ru.html
+https://github.com/imimz/subscription-template/releases/latest/download/ru.html
 ```
 
 2. Настройте PasarGuard в `/opt/pasarguard/.env`:
@@ -63,7 +65,7 @@ pasarguard restart
 ## Сборка Из Исходников
 
 ```sh
-git clone https://github.com/PasarGuard/subscription-template.git
+git clone https://github.com/imimz/subscription-template.git
 cd subscription-template
 bun install
 bun run build

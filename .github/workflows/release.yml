@@ -66,6 +66,15 @@ jobs:
               run: bun run build
               env:
                   VITE_FALLBACK_LANGUAGE: ${{ matrix.lang }}
+                  # Optional repository variables (Settings → Secrets and variables → Actions → Variables).
+                  # Unset variables build as empty, which keeps the defaults.
+                  VITE_EMERGENCY_CHARGE_URL: ${{ vars.VITE_EMERGENCY_CHARGE_URL }}
+                  VITE_EMERGENCY_CHARGE_MB: ${{ vars.VITE_EMERGENCY_CHARGE_MB }}
+                  VITE_EMERGENCY_CHARGE_THRESHOLD_MB: ${{ vars.VITE_EMERGENCY_CHARGE_THRESHOLD_MB }}
+                  VITE_TELEGRAM_BOT_URL: ${{ vars.VITE_TELEGRAM_BOT_URL }}
+                  VITE_PRIMARY_COLOR_LIGHT: ${{ vars.VITE_PRIMARY_COLOR_LIGHT }}
+                  VITE_PRIMARY_COLOR_DARK: ${{ vars.VITE_PRIMARY_COLOR_DARK }}
+                  VITE_BORDER_RADIUS: ${{ vars.VITE_BORDER_RADIUS }}
 
             - name: Package artifact
               run: |
