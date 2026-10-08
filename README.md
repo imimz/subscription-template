@@ -3,7 +3,7 @@
 A responsive subscription page for the [PasarGuard](https://github.com/PasarGuard/panel) panel. It is based on the official [PasarGuard/subscription-template](https://github.com/PasarGuard/subscription-template) and adds:
 
 - **Emergency charge**: a user who is out of traffic can claim free traffic (500 MB by default) once per purchase period, so they can reach your Telegram bot and renew.
-- **Setup guide**: pick a platform (Android, iOS, Windows, Linux) and get app cards with download and GitHub links, plus step-by-step setup tutorials.
+- **Setup guide**: pick a platform (Android, iOS, Windows, macOS, Linux) and get app cards with download and GitHub links, plus step-by-step setup tutorials.
 
 <p align="center">
   <img src="screenshots/emergency-charge-fa.png" alt="Emergency charge" width="70%">
@@ -33,7 +33,7 @@ A responsive subscription page for the [PasarGuard](https://github.com/PasarGuar
 - QR code for connection links
 - One-click copy for links and configs; Base64 copy is only in the QR modal
 - WireGuard links can be copied as a native config or downloaded as `.conf`
-- Setup guide with one-tap import buttons for apps that support deep links (v2rayNG, Hiddify, Streisand, sing-box, Clash)
+- Setup guide with one-tap import buttons for apps that support deep links (v2rayNG, Hiddify, Happ, Streisand, sing-box, Clash, FlClash)
 - Emergency charge card with a "buy from Telegram bot" button (optional)
 - Custom colors and border radius
 

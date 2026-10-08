@@ -1,6 +1,6 @@
 import { memo, useMemo, useRef, useState, type ComponentType, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { BookOpen, Check, CheckCircle2, Copy, Download, DownloadCloud, Github } from 'lucide-react'
+import { BookOpen, Check, CheckCircle2, Copy, Download, DownloadCloud, Github, Laptop } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   AndroidPlatformIcon,
@@ -18,15 +18,17 @@ const PLATFORM_ICONS: Record<TutorialPlatformId, { icon: ComponentType<PlatformI
   android: { icon: AndroidPlatformIcon, className: 'text-green-500' },
   ios: { icon: ApplePlatformIcon, className: 'text-foreground' },
   windows: { icon: WindowsPlatformIcon, className: 'text-sky-500' },
+  macos: { icon: Laptop, className: 'text-foreground' },
   linux: { icon: LinuxPlatformIcon, className: 'text-amber-500' },
 }
 
 const getDefaultPlatform = (): TutorialPlatformId => {
   switch (detectOS()) {
     case 'ios':
-    case 'macos':
     case 'appletv':
       return 'ios'
+    case 'macos':
+      return 'macos'
     case 'windows':
       return 'windows'
     case 'linux':
@@ -84,7 +86,7 @@ export const AppTutorials = memo(function AppTutorials() {
   return (
     <div className="space-y-4 sm:space-y-6 animate-fadeIn">
       {/* Platform picker */}
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4" role="tablist">
+      <div className="grid grid-cols-5 gap-1.5 sm:gap-4" role="tablist">
         {TUTORIAL_PLATFORMS.map(item => {
           const { icon: Icon, className } = PLATFORM_ICONS[item.id]
           const isActive = item.id === platform.id
@@ -96,17 +98,17 @@ export const AppTutorials = memo(function AppTutorials() {
               aria-selected={isActive}
               onClick={() => selectPlatform(item.id)}
               className={cn(
-                'flex cursor-pointer flex-col items-center gap-1.5 rounded-2xl border bg-card p-4 text-center transition-all duration-200 sm:p-6',
+                'flex min-w-0 cursor-pointer flex-col items-center gap-1 rounded-xl border bg-card px-1 py-3 text-center transition-all duration-200 sm:gap-1.5 sm:rounded-2xl sm:p-6',
                 'hover:border-primary/50 hover:shadow-lg hover:shadow-primary/5',
                 isActive && 'border-primary bg-primary/10 shadow-lg shadow-primary/10',
               )}
             >
-              <Icon className={cn('size-9 sm:size-11', className)} />
-              <span className="page-section-title">{item.title[lang]}</span>
-              <span className="page-badge text-muted-foreground" dir="ltr">
+              <Icon className={cn('size-7 sm:size-11', className)} />
+              <span className="text-xs font-bold text-foreground sm:text-xl sm:tracking-tight">{item.title[lang]}</span>
+              <span className="page-badge hidden text-muted-foreground sm:inline" dir="ltr">
                 {item.subtitle}
               </span>
-              <CheckCircle2 className={cn('size-4 text-primary', !isActive && 'invisible')} />
+              <CheckCircle2 className={cn('hidden size-4 text-primary sm:block', !isActive && 'sm:invisible')} />
             </button>
           )
         })}
