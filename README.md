@@ -25,6 +25,7 @@ A responsive subscription page for the [PasarGuard](https://github.com/PasarGuar
 - [Customization](#customization)
 - [Updating](#updating)
 - [Publishing a release (repository owner)](#publishing)
+- [Donate](#donate)
 
 ## Features
 
@@ -208,6 +209,8 @@ A GitHub Actions workflow builds one file per language and attaches them to ever
 ## Credits
 
 Based on [PasarGuard/subscription-template](https://github.com/PasarGuard/subscription-template) by the PasarGuard team.
+
+<a id="donate"></a>
 
 ## Donate
 

@@ -25,6 +25,7 @@
 - [شخصی‌سازی](#customization)
 - [به‌روزرسانی](#updating)
 - [انتشار نسخه (برای صاحب مخزن)](#publishing)
+- [حمایت مالی](#donate)
 
 <a id="features"></a>
 
@@ -219,6 +220,8 @@ sudo cp dist/index.html /var/lib/pasarguard/templates/subscription/index.html
 ## منبع
 
 بر پایه‌ی [PasarGuard/subscription-template](https://github.com/PasarGuard/subscription-template) از تیم PasarGuard.
+
+<a id="donate"></a>
 
 ## حمایت مالی
 
