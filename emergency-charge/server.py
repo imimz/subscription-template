@@ -45,7 +45,11 @@ log = logging.getLogger("emergency-charge")
 
 
 def load_env_file(path: str) -> None:
-    """Load KEY=VALUE lines into os.environ without overriding existing vars."""
+    """Load KEY=VALUE lines into os.environ.
+
+    The file wins over inherited variables: names like SSL_CERT_FILE are also standard
+    OpenSSL variables that some servers set globally, and must not replace this service's own.
+    """
     if not os.path.isfile(path):
         return
     with open(path, encoding="utf-8") as fh:
@@ -57,7 +61,7 @@ def load_env_file(path: str) -> None:
             value = value.strip()
             if len(value) >= 2 and value[0] == value[-1] and value[0] in "\"'":
                 value = value[1:-1]
-            os.environ.setdefault(key.strip(), value)
+            os.environ[key.strip()] = value
 
 
 def env_str(name: str, default: str = "") -> str:

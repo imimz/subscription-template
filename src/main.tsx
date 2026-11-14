@@ -5,11 +5,12 @@ import './i18n/config'
 import App from './App.tsx'
 import { ThemeProvider } from './components/theme-provider'
 import { Toaster } from './components/ui/sonner'
+import { templateSetting } from './lib/templateConfig'
 
 const documentRoot = document.documentElement
-const lightPrimaryColor = import.meta.env.VITE_PRIMARY_COLOR_LIGHT?.trim()
-const darkPrimaryColor = import.meta.env.VITE_PRIMARY_COLOR_DARK?.trim()
-const borderRadius = import.meta.env.VITE_BORDER_RADIUS?.trim()
+const lightPrimaryColor = templateSetting('primaryColorLight', import.meta.env.VITE_PRIMARY_COLOR_LIGHT)
+const darkPrimaryColor = templateSetting('primaryColorDark', import.meta.env.VITE_PRIMARY_COLOR_DARK)
+const borderRadius = templateSetting('borderRadius', import.meta.env.VITE_BORDER_RADIUS)
 
 const normalizeCssLength = (value?: string) => {
   if (!value) {
