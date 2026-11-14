@@ -30,7 +30,7 @@ import sys
 import threading
 import time
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from typing import Any
 from urllib import error as urlerror
@@ -82,6 +82,7 @@ class Config:
     verify_panel_tls: bool
     charge_bytes: int
     threshold_bytes: int
+    expired_extend_hours: float
     listen_host: str
     listen_port: int
     route_path: str
@@ -121,6 +122,7 @@ class Config:
             verify_panel_tls=env_bool("PANEL_VERIFY_TLS", True),
             charge_bytes=int(float(env_str("CHARGE_MB", "500")) * MB),
             threshold_bytes=int(float(env_str("LOW_TRAFFIC_THRESHOLD_MB", "500")) * MB),
+            expired_extend_hours=float(env_str("EXPIRED_EXTEND_HOURS", "24")),
             listen_host=env_str("LISTEN_HOST", "127.0.0.1"),
             listen_port=int(env_str("LISTEN_PORT", "8765")),
             route_path=route_path,
@@ -228,10 +230,8 @@ class PanelClient:
         log.error("Get user %s failed (%s): %s", username, status, body)
         raise ChargeError(502, "panel_error", "Could not read the user from the panel")
 
-    def set_data_limit(self, username: str, data_limit: int) -> dict[str, Any]:
-        status, body = self._admin_request(
-            "PUT", f"/api/user/{urlparse.quote(username, safe='')}", {"data_limit": data_limit}
-        )
+    def modify_user(self, username: str, changes: dict[str, Any]) -> dict[str, Any]:
+        status, body = self._admin_request("PUT", f"/api/user/{urlparse.quote(username, safe='')}", changes)
         if status == 200 and isinstance(body, dict):
             return body
         log.error("Modify user %s failed (%s): %s", username, status, body)
@@ -306,19 +306,22 @@ class EmergencyCharger:
             status = str(user.get("status") or "").lower()
             data_limit = int(user.get("data_limit") or 0)
             used = int(user.get("used_traffic") or 0)
-            expire_raw = user.get("expire")
-            expire_key = str(expire_raw or "")
+            expire_key = str(user.get("expire") or "")
+            now = datetime.now(timezone.utc)
+            expire_at = parse_expire(user.get("expire"))
+            is_expired = status == "expired" or (expire_at is not None and expire_at <= now)
 
-            if status not in ("active", "limited"):
+            if status not in ("active", "limited", "expired"):
                 raise ChargeError(403, "not_eligible", f"Status '{status}' is not eligible")
             if data_limit <= 0:
                 raise ChargeError(403, "not_eligible", "User has unlimited traffic")
-            expire_at = parse_expire(expire_raw)
-            if expire_at and expire_at <= datetime.now(timezone.utc):
-                raise ChargeError(403, "not_eligible", "Subscription has expired")
-            if status == "active" and data_limit - used >= self.config.threshold_bytes:
+            if is_expired and self.config.expired_extend_hours <= 0:
+                raise ChargeError(403, "expired", "Subscription has expired")
+            if not is_expired and status == "active" and data_limit - used >= self.config.threshold_bytes:
                 raise ChargeError(403, "not_needed", "User still has enough traffic")
 
+            # The stored claim holds the values this service set, so a claim stays "used" until the
+            # admin renews the subscription (new expire date or data limit) or usage is reset.
             last = self.store.last_claim(username)
             if last and (
                 last["expire"] == expire_key
@@ -328,17 +331,28 @@ class EmergencyCharger:
                 raise ChargeError(409, "already_used", "Emergency charge already used for this period")
 
             # Over-limit usage can exceed data_limit slightly; grant the full amount on top of it.
-            new_limit = max(data_limit, used) + self.config.charge_bytes
-            updated = self.panel.set_data_limit(username, new_limit)
-            granted_limit = int(updated.get("data_limit") or new_limit)
-            self.store.add_claim(username, expire_key, used, data_limit, granted_limit)
+            changes: dict[str, Any] = {"data_limit": max(data_limit, used) + self.config.charge_bytes}
+            if is_expired:
+                # An expired user can't connect with traffic alone, so give a short window to renew.
+                changes["expire"] = (now + timedelta(hours=self.config.expired_extend_hours)).isoformat()
+            updated = self.panel.modify_user(username, changes)
+            granted_limit = int(updated.get("data_limit") or changes["data_limit"])
+            granted_expire = str(updated.get("expire") or "")
+            self.store.add_claim(username, granted_expire, used, data_limit, granted_limit)
 
-        log.info("Charged %s: %d -> %d bytes", username, data_limit, granted_limit)
+        log.info(
+            "Charged %s: %d -> %d bytes%s",
+            username,
+            data_limit,
+            granted_limit,
+            f", expire -> {granted_expire}" if is_expired else "",
+        )
         return {
             "ok": True,
             "added_bytes": granted_limit - max(data_limit, used),
             "data_limit": granted_limit,
             "status": updated.get("status"),
+            "extended_until": granted_expire if is_expired else None,
         }
 
 

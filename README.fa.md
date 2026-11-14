@@ -169,7 +169,7 @@ VITE_EMERGENCY_CHARGE_THRESHOLD_MB=500
 VITE_TELEGRAM_BOT_URL=https://t.me/your_bot
 ```
 
-- `VITE_EMERGENCY_CHARGE_MB` و `VITE_EMERGENCY_CHARGE_THRESHOLD_MB` را برابر با `CHARGE_MB` و `LOW_TRAFFIC_THRESHOLD_MB` سرویس بگذارید.
+- `VITE_EMERGENCY_CHARGE_MB` و `VITE_EMERGENCY_CHARGE_THRESHOLD_MB` را برابر با `CHARGE_MB` و `LOW_TRAFFIC_THRESHOLD_MB` سرویس بگذارید. کاربر منقضی‌شده علاوه بر حجم، `EXPIRED_EXTEND_HOURS` ساعت (پیش‌فرض ۲۴) اعتبار هم می‌گیرد؛ اگر این عدد را عوض کردید، `VITE_EMERGENCY_CHARGE_EXTEND_HOURS` را هم برابرش بگذارید.
 - اگر `VITE_EMERGENCY_CHARGE_URL` خالی باشد، کارت شارژ نمایش داده نمی‌شود.
 - `VITE_TELEGRAM_BOT_URL` دکمه‌ی «خرید از ربات تلگرام» را اضافه می‌کند.
 

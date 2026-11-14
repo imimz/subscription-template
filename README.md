@@ -163,7 +163,7 @@ The page cannot change a data limit by itself, because that needs admin access. 
    VITE_TELEGRAM_BOT_URL=https://t.me/your_bot
    ```
 
-   Keep `VITE_EMERGENCY_CHARGE_MB` and `VITE_EMERGENCY_CHARGE_THRESHOLD_MB` equal to the service's `CHARGE_MB` and `LOW_TRAFFIC_THRESHOLD_MB`. If `VITE_EMERGENCY_CHARGE_URL` is empty, the card is hidden. `VITE_TELEGRAM_BOT_URL` adds the "buy from Telegram bot" button.
+   Keep `VITE_EMERGENCY_CHARGE_MB` and `VITE_EMERGENCY_CHARGE_THRESHOLD_MB` equal to the service's `CHARGE_MB` and `LOW_TRAFFIC_THRESHOLD_MB` (and `VITE_EMERGENCY_CHARGE_EXTEND_HOURS` to `EXPIRED_EXTEND_HOURS`, default 24). Expired users get that many hours of validity along with the traffic. If `VITE_EMERGENCY_CHARGE_URL` is empty, the card is hidden. `VITE_TELEGRAM_BOT_URL` adds the "buy from Telegram bot" button.
 
 <a id="customization"></a>
 

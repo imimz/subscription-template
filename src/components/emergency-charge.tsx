@@ -7,7 +7,9 @@ import { Spinner } from '@/components/ui/spinner'
 import {
   EMERGENCY_CHARGE_MB,
   TELEGRAM_BOT_URL,
+  EMERGENCY_CHARGE_EXTEND_HOURS,
   isEmergencyChargeAvailable,
+  isSubscriptionExpired,
   requestEmergencyCharge,
 } from '@/lib/emergencyCharge'
 
@@ -15,20 +17,25 @@ interface EmergencyChargeProps {
   status: string
   dataLimit: number
   usedTraffic: number
+  expire: string | null | undefined
   onCharged: () => void | Promise<void>
 }
 
-export function EmergencyCharge({ status, dataLimit, usedTraffic, onCharged }: EmergencyChargeProps) {
+export function EmergencyCharge({ status, dataLimit, usedTraffic, expire, onCharged }: EmergencyChargeProps) {
   const { t, i18n } = useTranslation()
   const [isCharging, setIsCharging] = useState(false)
   const [charged, setCharged] = useState(false)
   const [alreadyUsed, setAlreadyUsed] = useState(false)
+  const [extended, setExtended] = useState(false)
 
   // Keep the success card on screen after the charge lifts the user above the threshold.
-  if (!charged && !isEmergencyChargeAvailable({ status, dataLimit, usedTraffic })) return null
+  if (!charged && !isEmergencyChargeAvailable({ status, dataLimit, usedTraffic, expire })) return null
 
   const locale = i18n.language === 'fa' ? 'fa-IR' : i18n.language
-  const amount = t('emergencyCharge.amount', { value: new Intl.NumberFormat(locale).format(EMERGENCY_CHARGE_MB) })
+  const numberFormat = new Intl.NumberFormat(locale)
+  const amount = t('emergencyCharge.amount', { value: numberFormat.format(EMERGENCY_CHARGE_MB) })
+  const hours = numberFormat.format(EMERGENCY_CHARGE_EXTEND_HOURS)
+  const isExpired = isSubscriptionExpired(status, expire)
 
   const handleCharge = async () => {
     setIsCharging(true)
@@ -37,7 +44,12 @@ export function EmergencyCharge({ status, dataLimit, usedTraffic, onCharged }: E
 
     if (result.ok) {
       setCharged(true)
-      toast.success(t('emergencyCharge.success', { amount }))
+      setExtended(Boolean(result.extendedUntil))
+      toast.success(
+        result.extendedUntil
+          ? t('emergencyCharge.successExpired', { amount, hours })
+          : t('emergencyCharge.success', { amount }),
+      )
       await onCharged()
       return
     }
@@ -69,10 +81,16 @@ export function EmergencyCharge({ status, dataLimit, usedTraffic, onCharged }: E
               </h2>
               <p className="page-meta">
                 {charged
-                  ? t('emergencyCharge.chargedDescription', { amount })
+                  ? t(extended ? 'emergencyCharge.chargedDescriptionExpired' : 'emergencyCharge.chargedDescription', {
+                      amount,
+                      hours,
+                    })
                   : alreadyUsed
                     ? t('emergencyCharge.errors.already_used')
-                    : t('emergencyCharge.description', { amount })}
+                    : t(isExpired ? 'emergencyCharge.descriptionExpired' : 'emergencyCharge.description', {
+                        amount,
+                        hours,
+                      })}
               </p>
             </div>
           </div>
