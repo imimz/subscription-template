@@ -5,8 +5,11 @@ PasarGuard 的响应式订阅页面模板，基于官方 [PasarGuard/subscriptio
 > 此版本新增了**紧急充值**和各平台的**连接教程**。完整文档（包括紧急充值的配置以及如何从原版模板迁移）请参阅 [README.md](README.md)（英文）。
 
 <p align="center">
-  <img src="screenshots/en.png" alt="English UI" width="40%">
-  <img src="screenshots/fa.png" alt="Persian UI" width="30%">
+  <img src="screenshots/emergency-charge-fa.png" alt="Emergency charge" width="70%">
+</p>
+<p align="center">
+  <img src="screenshots/tutorials-fa.png" alt="Setup guide" width="70%">
+  <img src="screenshots/mobile-fa.png" alt="Mobile" width="22%">
 </p>
 
 ## 功能
