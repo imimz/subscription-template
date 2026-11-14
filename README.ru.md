@@ -5,8 +5,11 @@
 > Эта версия добавляет **экстренное пополнение** трафика и **инструкции по подключению** для каждой платформы. Полная документация, включая настройку экстренного пополнения и переход с оригинального шаблона, находится в [README.md](README.md) (на английском).
 
 <p align="center">
-  <img src="screenshots/en.png" alt="English UI" width="40%">
-  <img src="screenshots/fa.png" alt="Persian UI" width="30%">
+  <img src="screenshots/emergency-charge-fa.png" alt="Emergency charge" width="70%">
+</p>
+<p align="center">
+  <img src="screenshots/tutorials-fa.png" alt="Setup guide" width="70%">
+  <img src="screenshots/mobile-fa.png" alt="Mobile" width="22%">
 </p>
 
 ## Возможности
