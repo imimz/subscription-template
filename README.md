@@ -47,15 +47,6 @@ A responsive subscription page for the [PasarGuard](https://github.com/PasarGuar
 
 ## Install
 
-There are two ways to install:
-
-| | Quick install (release) | Build from source |
-| --- | --- | --- |
-| Setup guide | ✅ | ✅ |
-| Emergency charge and Telegram button | Only if the repository owner set them in [repository variables](#publishing) before the release | ✅ Set in your `.env` |
-| Custom colors | Same as above | ✅ |
-| Needs Bun on the server | No | Yes |
-
 ### Option 1: Quick install (release)
 
 ```sh
@@ -217,3 +208,11 @@ A GitHub Actions workflow builds one file per language and attaches them to ever
 ## Credits
 
 Based on [PasarGuard/subscription-template](https://github.com/PasarGuard/subscription-template) by the PasarGuard team.
+
+## Donate
+
+If this project is useful to you, you can support it with TON:
+
+```
+UQAlKB5FgfqF1Wq3o0J9x6DrXjJRx0nBt5DtU-rfbcDQNCsp
+```
