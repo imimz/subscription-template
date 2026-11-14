@@ -1,5 +1,5 @@
 import type { LucideIcon } from 'lucide-react'
-import { Box, Cat, Network, Package, Plane, Rocket, Send, Shield, ShieldCheck, Sparkles } from 'lucide-react'
+import { Box, Cat, Crown, Layers, Network, Package, Plane, Rocket, Send, Shield, ShieldCheck, Smile, Sparkles } from 'lucide-react'
 
 /**
  * Content of the "apps & tutorials" section.
@@ -12,7 +12,7 @@ import { Box, Cat, Network, Package, Plane, Rocket, Send, Shield, ShieldCheck, S
 
 export type Localized = { fa: string; en: string }
 
-export type TutorialPlatformId = 'android' | 'ios' | 'windows' | 'linux'
+export type TutorialPlatformId = 'android' | 'ios' | 'windows' | 'macos' | 'linux'
 
 export type DownloadKind = 'apk' | 'appStore' | 'googlePlay' | 'direct'
 
@@ -145,6 +145,88 @@ const clashVergeSteps: TutorialStep[] = [
     body: {
       fa: 'در بخش `Proxies` می‌توانید تاخیر سرورها را تست کنید و سرور دلخواه را انتخاب کنید.',
       en: 'In `Proxies` you can test server latency and pick the one you want.',
+    },
+  },
+]
+
+const v2boxSteps: TutorialStep[] = [
+  {
+    title: { fa: 'افزودن اشتراک', en: 'Add the subscription' },
+    body: {
+      fa: 'V2Box را باز کنید، به تب `Configs` بروید، روی `+` بزنید و `Add Subscription` را انتخاب کنید. یک نام دلخواه بنویسید، لینک را در قسمت `URL` قرار دهید و `Add` را بزنید.',
+      en: 'Open V2Box, go to `Configs`, tap `+` and choose `Add Subscription`. Enter any name, paste the link into `URL` and tap `Add`.',
+    },
+  },
+  {
+    title: { fa: 'اتصال', en: 'Connect' },
+    body: {
+      fa: 'یک سرور را انتخاب کنید، به تب `Home` بروید و روی `Connect` بزنید. درخواست افزودن VPN را `Allow` کنید.',
+      en: 'Select a server, go to `Home` and tap `Connect`. `Allow` the VPN configuration request.',
+    },
+  },
+]
+
+const happSteps: TutorialStep[] = [
+  {
+    title: { fa: 'افزودن لینک در Happ', en: 'Add the link in Happ' },
+    body: {
+      fa: 'Happ را باز کنید و روی `+` بالای صفحه بزنید، سپس گزینه‌ی افزودن از کلیپ‌بورد (`Clipboard`) را انتخاب کنید تا اشتراک اضافه شود.',
+      en: 'Open Happ, tap `+` at the top and choose the add-from-clipboard option (`Clipboard`) to add the subscription.',
+    },
+  },
+  {
+    title: { fa: 'اتصال', en: 'Connect' },
+    body: {
+      fa: 'یکی از سرورها را انتخاب کنید و دکمه‌ی اتصال را بزنید. در اولین اتصال، درخواست افزودن VPN را تایید (`Allow` / `OK`) کنید.',
+      en: 'Pick a server and tap the connect button. On the first connection, accept (`Allow` / `OK`) the VPN request.',
+    },
+  },
+  {
+    title: { fa: 'به‌روزرسانی سرورها', en: 'Update servers' },
+    body: {
+      fa: 'برای دریافت جدیدترین سرورها، روی آیکون به‌روزرسانی کنار نام اشتراک بزنید.',
+      en: 'Tap the refresh icon next to the subscription name to get the latest servers.',
+    },
+  },
+]
+
+const flclashSteps: TutorialStep[] = [
+  {
+    title: { fa: 'افزودن پروفایل در FlClash', en: 'Add a profile in FlClash' },
+    body: {
+      fa: 'FlClash را باز کنید و به بخش `Profiles` بروید. روی `+` بزنید، گزینه‌ی `URL` را انتخاب کنید، لینک را قرار دهید و `Submit` را بزنید.',
+      en: 'Open FlClash and go to `Profiles`. Tap `+`, choose `URL`, paste the link and tap `Submit`.',
+    },
+  },
+  {
+    title: { fa: 'اتصال', en: 'Connect' },
+    body: {
+      fa: 'به `Dashboard` برگردید و دکمه‌ی شروع (▶) پایین صفحه را بزنید. در کامپیوتر، برای اینکه همه‌ی برنامه‌ها از VPN رد شوند، `System proxy` یا `TUN` را در داشبورد روشن کنید.',
+      en: 'Go back to `Dashboard` and tap the start button (▶) at the bottom. On a computer, turn on `System proxy` or `TUN` in the dashboard so every app goes through the VPN.',
+    },
+  },
+]
+
+const throneSteps: TutorialStep[] = [
+  {
+    title: { fa: 'نصب و اجرا', en: 'Install and run' },
+    body: {
+      fa: 'از صفحه دانلود، فایل zip مناسب سیستم خود را دریافت کنید، از حالت فشرده خارج کنید و برنامه‌ی `Throne` را اجرا کنید. (Throne نسخه‌ی جدید NekoRay است.)',
+      en: 'From the download page get the zip for your system, extract it and run `Throne`. (Throne is the successor of NekoRay.)',
+    },
+  },
+  {
+    title: { fa: 'افزودن اشتراک', en: 'Add the subscription' },
+    body: {
+      fa: 'از منوی `Preferences` گزینه‌ی `Groups` را باز کنید، `New group` را بزنید، `Type` را روی `Subscription` بگذارید، لینک را در `URL` قرار دهید و `OK` را بزنید. سپس `Update subscription` را بزنید تا سرورها بارگذاری شوند.',
+      en: 'Open `Preferences` → `Groups`, click `New group`, set `Type` to `Subscription`, paste the link into `URL` and click `OK`. Then click `Update subscription` to load the servers.',
+    },
+  },
+  {
+    title: { fa: 'اتصال', en: 'Connect' },
+    body: {
+      fa: 'یک سرور را انتخاب کنید، در بالای برنامه `System Proxy` (یا برای همه‌ی برنامه‌ها `Tun Mode`) را فعال کنید و با `Start` یا دوبار کلیک روی سرور وصل شوید.',
+      en: 'Select a server, enable `System Proxy` at the top (or `Tun Mode` for every app), then connect with `Start` or by double-clicking the server.',
     },
   },
 ]
@@ -297,6 +379,34 @@ export const TUTORIAL_PLATFORMS: TutorialPlatform[] = [
         importUrl: 'sing-box://import-remote-profile?url={url}',
         steps: singBoxSteps,
       },
+      {
+        id: 'happ-android',
+        name: 'Happ',
+        icon: Smile,
+        iconClassName: 'text-pink-500',
+        description: {
+          fa: 'کلاینت سریع و ساده با رابط کاربری مدرن و پشتیبانی از همه‌ی پروتکل‌ها',
+          en: 'Fast, simple client with a modern UI and support for every protocol',
+        },
+        download: { url: 'https://github.com/Happ-proxy/happ-android/releases/latest/download/Happ.apk', kind: 'apk' },
+        githubUrl: 'https://github.com/Happ-proxy/happ-android',
+        importUrl: 'happ://add/{url}',
+        steps: happSteps,
+      },
+      {
+        id: 'flclash-android',
+        name: 'FlClash',
+        icon: Layers,
+        iconClassName: 'text-indigo-500',
+        description: {
+          fa: 'کلاینت چندسکویی Clash با رابط کاربری ساده و TUN Mode',
+          en: 'Cross-platform Clash client with a clean UI and TUN mode',
+        },
+        download: { url: 'https://github.com/chen08209/FlClash/releases/latest', kind: 'apk' },
+        githubUrl: 'https://github.com/chen08209/FlClash',
+        importUrl: 'clash://install-config?url={url}',
+        steps: flclashSteps,
+      },
     ],
   },
   {
@@ -350,22 +460,7 @@ export const TUTORIAL_PLATFORMS: TutorialPlatform[] = [
           en: 'Simple interface with built-in server speed tests',
         },
         download: { url: 'https://apps.apple.com/app/v2box-v2ray-client/id6446814690', kind: 'appStore' },
-        steps: [
-          {
-            title: { fa: 'افزودن اشتراک', en: 'Add the subscription' },
-            body: {
-              fa: 'V2Box را باز کنید، به تب `Configs` بروید، روی `+` بزنید و `Add Subscription` را انتخاب کنید. یک نام دلخواه بنویسید، لینک را در قسمت `URL` قرار دهید و `Add` را بزنید.',
-              en: 'Open V2Box, go to `Configs`, tap `+` and choose `Add Subscription`. Enter any name, paste the link into `URL` and tap `Add`.',
-            },
-          },
-          {
-            title: { fa: 'اتصال', en: 'Connect' },
-            body: {
-              fa: 'یک سرور را انتخاب کنید، به تب `Home` بروید و روی `Connect` بزنید. درخواست افزودن VPN را `Allow` کنید.',
-              en: 'Select a server, go to `Home` and tap `Connect`. `Allow` the VPN configuration request.',
-            },
-          },
-        ],
+        steps: v2boxSteps,
       },
       {
         id: 'hiddify-ios',
@@ -435,6 +530,19 @@ export const TUTORIAL_PLATFORMS: TutorialPlatform[] = [
           },
         ],
       },
+      {
+        id: 'happ-ios',
+        name: 'Happ',
+        icon: Smile,
+        iconClassName: 'text-pink-500',
+        description: {
+          fa: 'کلاینت سریع و ساده با رابط کاربری مدرن و پشتیبانی از همه‌ی پروتکل‌ها',
+          en: 'Fast, simple client with a modern UI and support for every protocol',
+        },
+        download: { url: 'https://apps.apple.com/app/happ-proxy-utility/id6504287215', kind: 'appStore' },
+        importUrl: 'happ://add/{url}',
+        steps: happSteps,
+      },
     ],
   },
   {
@@ -497,6 +605,135 @@ export const TUTORIAL_PLATFORMS: TutorialPlatform[] = [
         githubUrl: 'https://github.com/KaringX/karing',
         steps: karingSteps,
       },
+      {
+        id: 'happ-windows',
+        name: 'Happ',
+        icon: Smile,
+        iconClassName: 'text-pink-500',
+        description: {
+          fa: 'کلاینت سریع و ساده با رابط کاربری مدرن و پشتیبانی از همه‌ی پروتکل‌ها',
+          en: 'Fast, simple client with a modern UI and support for every protocol',
+        },
+        download: { url: 'https://github.com/Happ-proxy/happ-desktop/releases/latest/download/setup-Happ.x64.exe', kind: 'direct' },
+        githubUrl: 'https://github.com/Happ-proxy/happ-desktop',
+        importUrl: 'happ://add/{url}',
+        steps: happSteps,
+      },
+      {
+        id: 'flclash-windows',
+        name: 'FlClash',
+        icon: Layers,
+        iconClassName: 'text-indigo-500',
+        description: {
+          fa: 'کلاینت چندسکویی Clash با رابط کاربری ساده و TUN Mode',
+          en: 'Cross-platform Clash client with a clean UI and TUN mode',
+        },
+        download: { url: 'https://github.com/chen08209/FlClash/releases/latest', kind: 'direct' },
+        githubUrl: 'https://github.com/chen08209/FlClash',
+        importUrl: 'clash://install-config?url={url}',
+        steps: flclashSteps,
+      },
+      {
+        id: 'throne-windows',
+        name: 'Throne (NekoRay)',
+        icon: Crown,
+        iconClassName: 'text-amber-500',
+        description: {
+          fa: 'نسخه‌ی جدید NekoRay بر پایه‌ی Sing-Box با امکانات حرفه‌ای',
+          en: 'The successor of NekoRay, built on sing-box with advanced options',
+        },
+        download: { url: 'https://github.com/throneproj/Throne/releases/latest', kind: 'direct' },
+        githubUrl: 'https://github.com/throneproj/Throne',
+        steps: throneSteps,
+      },
+    ],
+  },
+  {
+    id: 'macos',
+    title: { fa: 'مک', en: 'macOS' },
+    subtitle: 'MacBook & iMac',
+    apps: [
+      {
+        id: 'happ-macos',
+        name: 'Happ',
+        icon: Smile,
+        iconClassName: 'text-pink-500',
+        description: {
+          fa: 'کلاینت سریع و ساده با رابط کاربری مدرن و پشتیبانی از همه‌ی پروتکل‌ها',
+          en: 'Fast, simple client with a modern UI and support for every protocol',
+        },
+        download: { url: 'https://github.com/Happ-proxy/happ-desktop/releases/latest/download/Happ.macOS.universal.dmg', kind: 'direct' },
+        githubUrl: 'https://github.com/Happ-proxy/happ-desktop',
+        importUrl: 'happ://add/{url}',
+        steps: happSteps,
+      },
+      {
+        id: 'hiddify-macos',
+        name: 'Hiddify',
+        icon: Rocket,
+        iconClassName: 'text-sky-500',
+        description: {
+          fa: 'نصب ساده و اتصال با یک کلیک',
+          en: 'Easy install and one-click connection',
+        },
+        download: { url: 'https://github.com/hiddify/hiddify-app/releases/latest', kind: 'direct' },
+        githubUrl: 'https://github.com/hiddify/hiddify-app',
+        importUrl: 'hiddify://import/{url}',
+        steps: hiddifySteps,
+      },
+      {
+        id: 'v2box-macos',
+        name: 'V2Box',
+        icon: Package,
+        iconClassName: 'text-orange-500',
+        description: {
+          fa: 'رابط کاربری ساده با امکان تست سرعت سرورها',
+          en: 'Simple interface with built-in server speed tests',
+        },
+        download: { url: 'https://apps.apple.com/app/v2box-v2ray-client/id6446814690', kind: 'appStore' },
+        steps: v2boxSteps,
+      },
+      {
+        id: 'clash-verge-macos',
+        name: 'Clash Verge Rev',
+        icon: Cat,
+        iconClassName: 'text-cyan-500',
+        description: {
+          fa: 'رابط کاربری زیبا با TUN Mode و رول‌های هوشمند',
+          en: 'Polished UI with TUN mode and smart rules',
+        },
+        download: { url: 'https://github.com/clash-verge-rev/clash-verge-rev/releases/latest', kind: 'direct' },
+        githubUrl: 'https://github.com/clash-verge-rev/clash-verge-rev',
+        importUrl: 'clash://install-config?url={url}',
+        steps: clashVergeSteps,
+      },
+      {
+        id: 'flclash-macos',
+        name: 'FlClash',
+        icon: Layers,
+        iconClassName: 'text-indigo-500',
+        description: {
+          fa: 'کلاینت چندسکویی Clash با رابط کاربری ساده و TUN Mode',
+          en: 'Cross-platform Clash client with a clean UI and TUN mode',
+        },
+        download: { url: 'https://github.com/chen08209/FlClash/releases/latest', kind: 'direct' },
+        githubUrl: 'https://github.com/chen08209/FlClash',
+        importUrl: 'clash://install-config?url={url}',
+        steps: flclashSteps,
+      },
+      {
+        id: 'karing-macos',
+        name: 'Karing',
+        icon: Send,
+        iconClassName: 'text-blue-500',
+        description: {
+          fa: 'کلاینت نسل جدید و ساده با اتصال خودکار',
+          en: 'Simple next-gen client with auto-connect',
+        },
+        download: { url: 'https://github.com/KaringX/karing/releases/latest', kind: 'direct' },
+        githubUrl: 'https://github.com/KaringX/karing',
+        steps: karingSteps,
+      },
     ],
   },
   {
@@ -545,6 +782,47 @@ export const TUTORIAL_PLATFORMS: TutorialPlatform[] = [
         githubUrl: 'https://github.com/clash-verge-rev/clash-verge-rev',
         importUrl: 'clash://install-config?url={url}',
         steps: clashVergeSteps,
+      },
+      {
+        id: 'happ-linux',
+        name: 'Happ',
+        icon: Smile,
+        iconClassName: 'text-pink-500',
+        description: {
+          fa: 'کلاینت سریع و ساده با رابط کاربری مدرن و پشتیبانی از همه‌ی پروتکل‌ها',
+          en: 'Fast, simple client with a modern UI and support for every protocol',
+        },
+        download: { url: 'https://github.com/Happ-proxy/happ-desktop/releases/latest/download/Happ.linux.x64.deb', kind: 'direct' },
+        githubUrl: 'https://github.com/Happ-proxy/happ-desktop',
+        importUrl: 'happ://add/{url}',
+        steps: happSteps,
+      },
+      {
+        id: 'flclash-linux',
+        name: 'FlClash',
+        icon: Layers,
+        iconClassName: 'text-indigo-500',
+        description: {
+          fa: 'کلاینت چندسکویی Clash با رابط کاربری ساده و TUN Mode',
+          en: 'Cross-platform Clash client with a clean UI and TUN mode',
+        },
+        download: { url: 'https://github.com/chen08209/FlClash/releases/latest', kind: 'direct' },
+        githubUrl: 'https://github.com/chen08209/FlClash',
+        importUrl: 'clash://install-config?url={url}',
+        steps: flclashSteps,
+      },
+      {
+        id: 'throne-linux',
+        name: 'Throne (NekoRay)',
+        icon: Crown,
+        iconClassName: 'text-amber-500',
+        description: {
+          fa: 'نسخه‌ی جدید NekoRay بر پایه‌ی Sing-Box با امکانات حرفه‌ای',
+          en: 'The successor of NekoRay, built on sing-box with advanced options',
+        },
+        download: { url: 'https://github.com/throneproj/Throne/releases/latest', kind: 'direct' },
+        githubUrl: 'https://github.com/throneproj/Throne',
+        steps: throneSteps,
       },
     ],
   },

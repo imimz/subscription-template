@@ -333,6 +333,7 @@ function App() {
               status={normalizedStatus}
               dataLimit={effectiveData.data_limit}
               usedTraffic={effectiveData.used_traffic}
+              expire={effectiveData.expire}
               onCharged={refresh}
             />
 

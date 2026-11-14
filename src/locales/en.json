@@ -132,11 +132,14 @@
   "emergencyCharge": {
     "title": "Emergency charge",
     "description": "Your traffic has run out or is about to. Get {{amount}} of free traffic with an emergency charge so you can renew your subscription through the Telegram bot. It can be used once per purchase period.",
+    "descriptionExpired": "Your subscription has expired. Get {{amount}} of free traffic and {{hours}} hours of validity with an emergency charge so you can renew through the Telegram bot. It can be used once per purchase period.",
     "amount": "{{value}} MB",
     "button": "Get {{amount}} free",
     "chargedTitle": "Emergency charge activated",
     "chargedDescription": "{{amount}} was added to your subscription. Now renew your subscription through the Telegram bot.",
+    "chargedDescriptionExpired": "{{amount}} of traffic and {{hours}} hours of validity were added to your subscription. Now renew it through the Telegram bot.",
     "success": "{{amount}} was added to your subscription",
+    "successExpired": "{{amount}} and {{hours}} hours of validity were added to your subscription",
     "goToBot": "Buy from the Telegram bot",
     "errors": {
       "already_used": "The emergency charge was already used this period. Please renew your subscription through the Telegram bot.",
@@ -145,7 +148,9 @@
       "invalid_token": "Invalid subscription.",
       "rate_limited": "Too many requests; please try again shortly.",
       "network": "Could not reach the server; please try again.",
-      "unknown": "Something went wrong; please try again."
+      "unknown": "Something went wrong; please try again.",
+      "expired": "Your subscription has expired; please renew it.",
+      "unavailable": "The emergency charge service is temporarily unavailable; please try again shortly."
     }
   },
   "tutorials": {

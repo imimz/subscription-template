@@ -3,7 +3,7 @@
 این قالب، صفحه‌ی اشتراک واکنش‌گرا برای پنل [PasarGuard](https://github.com/PasarGuard/panel) است. بر پایه‌ی قالب رسمی [PasarGuard/subscription-template](https://github.com/PasarGuard/subscription-template) ساخته شده و این امکانات را اضافه می‌کند:
 
 - **شارژ اضطراری:** کاربری که حجمش تمام شده، در هر دوره‌ی خرید یک بار حجم رایگان (پیش‌فرض ۵۰۰ مگابایت) دریافت می‌کند تا بتواند وارد ربات تلگرام شود و سرویسش را تمدید کند.
-- **آموزش اتصال:** کاربر سیستم‌عامل خود (اندروید، آی‌اواس، ویندوز، لینوکس) را انتخاب می‌کند. برای هر برنامه یک کارت با لینک دانلود و گیت‌هاب و آموزش مرحله‌به‌مرحله نمایش داده می‌شود.
+- **آموزش اتصال:** کاربر سیستم‌عامل خود (اندروید، آی‌اواس، ویندوز، مک، لینوکس) را انتخاب می‌کند. برای هر برنامه یک کارت با لینک دانلود و گیت‌هاب و آموزش مرحله‌به‌مرحله نمایش داده می‌شود.
 
 <p align="center">
   <img src="screenshots/emergency-charge-fa.png" alt="شارژ اضطراری" width="70%">
@@ -35,7 +35,7 @@
 - کد QR برای لینک‌های اتصال
 - کپی لینک و کانفیگ با یک کلیک. کپی Base64 فقط در مودال QR هست.
 - لینک‌های WireGuard هم به صورت کانفیگ اصلی کپی می‌شوند و هم با فرمت `.conf` دانلود
-- آموزش اتصال با دکمه‌ی «افزودن خودکار» برای برنامه‌هایی که از آن پشتیبانی می‌کنند (v2rayNG، Hiddify، Streisand، sing-box، Clash)
+- آموزش اتصال با دکمه‌ی «افزودن خودکار» برای برنامه‌هایی که از آن پشتیبانی می‌کنند (v2rayNG، Hiddify، Happ، Streisand، sing-box، Clash، FlClash)
 - کارت شارژ اضطراری و دکمه‌ی «خرید از ربات تلگرام» (اختیاری)
 - رنگ و گردی گوشه‌های قابل تنظیم
 
@@ -169,7 +169,7 @@ VITE_EMERGENCY_CHARGE_THRESHOLD_MB=500
 VITE_TELEGRAM_BOT_URL=https://t.me/your_bot
 ```
 
-- `VITE_EMERGENCY_CHARGE_MB` و `VITE_EMERGENCY_CHARGE_THRESHOLD_MB` را برابر با `CHARGE_MB` و `LOW_TRAFFIC_THRESHOLD_MB` سرویس بگذارید.
+- `VITE_EMERGENCY_CHARGE_MB` و `VITE_EMERGENCY_CHARGE_THRESHOLD_MB` را برابر با `CHARGE_MB` و `LOW_TRAFFIC_THRESHOLD_MB` سرویس بگذارید. کاربر منقضی‌شده علاوه بر حجم، `EXPIRED_EXTEND_HOURS` ساعت (پیش‌فرض ۲۴) اعتبار هم می‌گیرد؛ اگر این عدد را عوض کردید، `VITE_EMERGENCY_CHARGE_EXTEND_HOURS` را هم برابرش بگذارید.
 - اگر `VITE_EMERGENCY_CHARGE_URL` خالی باشد، کارت شارژ نمایش داده نمی‌شود.
 - `VITE_TELEGRAM_BOT_URL` دکمه‌ی «خرید از ربات تلگرام» را اضافه می‌کند.
 

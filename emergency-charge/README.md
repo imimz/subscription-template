@@ -6,7 +6,8 @@
 
 ## قوانین
 
-- فقط کاربرانی که وضعیتشان `active` یا `limited` است، حجم نامحدود ندارند و حجم باقی‌مانده‌شان کمتر از `LOW_TRAFFIC_THRESHOLD_MB` است می‌توانند شارژ اضطراری بگیرند.
+- فقط کاربرانی که وضعیتشان `active`، `limited` یا `expired` است و حجم نامحدود ندارند می‌توانند شارژ اضطراری بگیرند. کاربر `active` فقط وقتی که حجم باقی‌مانده‌اش کمتر از `LOW_TRAFFIC_THRESHOLD_MB` باشد.
+- اگر سرویس کاربر **منقضی شده** باشد، علاوه بر حجم، `EXPIRED_EXTEND_HOURS` ساعت (پیش‌فرض ۲۴) اعتبار هم می‌گیرد تا بتواند وصل شود و تمدید کند. با `EXPIRED_EXTEND_HOURS=0` کاربرهای منقضی رد می‌شوند.
 - هر کاربر در **هر دوره خرید فقط یک بار** می‌تواند از آن استفاده کند. دوره جدید وقتی شروع می‌شود که سرویس کاربر تمدید شود، یعنی تاریخ انقضا یا حجم کل تغییر کند یا حجم مصرفی ریست شود.
 - هویت کاربر از روی توکن لینک اشتراکش و از طریق خود پنل بررسی می‌شود. کاربر نمی‌تواند برای شخص دیگری شارژ بگیرد.
 - سوابق استفاده در یک فایل SQLite (`claims.db`) نگه داشته می‌شود.
@@ -30,12 +31,13 @@ sudo journalctl -u emergency-charge -f   # مشاهده لاگ
 
 | متغیر | توضیح |
 | --- | --- |
-| `PANEL_URL` | آدرس پنل، مثلاً `https://panel.example.com:8000` |
+| `PANEL_URL` | آدرس پنل، مثلاً `https://panel.example.com:8000`. اگر سرویس روی همان سرور پنل است، آدرس داخلی (مثلاً `https://127.0.0.1:8000` با پورت پنل) را بگذارید و `PANEL_VERIFY_TLS=false` کنید؛ اتصال از راه دامنه و IP عمومی ممکن است با خطای SSL قطع شود |
 | `SUB_PATH` | مسیر لینک اشتراک در پنل (پیش‌فرض `sub`) |
 | `PANEL_API_KEY` | کلید API ادمین (از بخش API Keys پنل)، **یا** |
 | `PANEL_ADMIN_USERNAME` / `PANEL_ADMIN_PASSWORD` | نام کاربری و رمز یک ادمین که اجازه خواندن و ویرایش کاربران را دارد |
 | `CHARGE_MB` | مقدار حجم رایگان (پیش‌فرض `500`) |
 | `LOW_TRAFFIC_THRESHOLD_MB` | اگر حجم باقی‌مانده کمتر از این مقدار باشد، شارژ مجاز است (پیش‌فرض `500`) |
+| `EXPIRED_EXTEND_HOURS` | ساعت اعتبار اضافه برای کاربر منقضی‌شده (پیش‌فرض `24`؛ `0` یعنی کاربر منقضی رد شود) |
 | `ALLOWED_ORIGINS` | آدرس صفحه اشتراک (فقط دامنه و پورت)، مثلاً `https://panel.example.com:8000` |
 
 ## اتصال صفحه اشتراک به سرویس
@@ -90,6 +92,6 @@ curl https://panel.example.com:8765/emergency-charge/health
 
 ## English summary
 
-A tiny stdlib-only Python service that adds `CHARGE_MB` (default 500 MB) to a user's data limit when they press **Emergency charge** on the subscription page. It verifies the user through the panel's `/<sub-path>/<token>/info` endpoint, only allows `active`/`limited` users that are below `LOW_TRAFFIC_THRESHOLD_MB`, and allows one claim per purchase period (a renewal that changes the expire date or data limit, or resets usage, starts a new period). Configure it with `.env` (see `.env.example`), run it with the included systemd unit behind a reverse proxy or with `SSL_CERT_FILE`/`SSL_KEY_FILE`, and build the template with `VITE_EMERGENCY_CHARGE_URL` pointing to it.
+A tiny stdlib-only Python service that adds `CHARGE_MB` (default 500 MB) to a user's data limit when they press **Emergency charge** on the subscription page. It verifies the user through the panel's `/<sub-path>/<token>/info` endpoint, only allows `limited`/`expired` users and `active` users below `LOW_TRAFFIC_THRESHOLD_MB`, gives expired users `EXPIRED_EXTEND_HOURS` (default 24) of validity as well, and allows one claim per purchase period (a renewal that changes the expire date or data limit, or resets usage, starts a new period). Configure it with `.env` (see `.env.example`), run it with the included systemd unit behind a reverse proxy or with `SSL_CERT_FILE`/`SSL_KEY_FILE`, and build the template with `VITE_EMERGENCY_CHARGE_URL` pointing to it.
 
 API: `POST <ROUTE_PATH>` with `{"token": "<subscription token>"}` returns `{"ok": true, "added_bytes": ..., "data_limit": ...}` or `{"ok": false, "code": "already_used" | "not_eligible" | "not_needed" | "invalid_token" | "rate_limited" | ...}`.
