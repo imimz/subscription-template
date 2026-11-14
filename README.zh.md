@@ -97,3 +97,11 @@ VITE_BORDER_RADIUS=0.65rem
 - [English](README.md)
 - [فارسی (Persian)](README.fa.md)
 - [Русский (Russian)](README.ru.md)
+
+## 捐赠
+
+如果这个项目对您有帮助，欢迎通过 TON 支持：
+
+```
+UQAlKB5FgfqF1Wq3o0J9x6DrXjJRx0nBt5DtU-rfbcDQNCsp
+```

@@ -25,6 +25,7 @@
 - [شخصی‌سازی](#customization)
 - [به‌روزرسانی](#updating)
 - [انتشار نسخه (برای صاحب مخزن)](#publishing)
+- [حمایت مالی](#donate)
 
 <a id="features"></a>
 
@@ -50,8 +51,6 @@
 <a id="install"></a>
 
 ## نصب
-
-
 
 ### روش ۱: نصب سریع (Release)
 
@@ -221,3 +220,13 @@ sudo cp dist/index.html /var/lib/pasarguard/templates/subscription/index.html
 ## منبع
 
 بر پایه‌ی [PasarGuard/subscription-template](https://github.com/PasarGuard/subscription-template) از تیم PasarGuard.
+
+<a id="donate"></a>
+
+## حمایت مالی
+
+اگر این پروژه برایتان مفید بوده، می‌توانید با TON از آن حمایت کنید:
+
+```
+UQAlKB5FgfqF1Wq3o0J9x6DrXjJRx0nBt5DtU-rfbcDQNCsp
+```
