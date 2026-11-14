@@ -27,3 +27,7 @@ dist-ssr
 # Emergency charge service
 emergency-charge/.env
 emergency-charge/*.db
+
+# Python bytecode
+__pycache__/
+*.pyc
