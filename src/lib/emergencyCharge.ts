@@ -1,3 +1,5 @@
+import { templateSetting } from '@/lib/templateConfig'
+
 const MB = 1024 * 1024
 
 const parseMegabytes = (value: string | undefined, fallback: number) => {
@@ -5,13 +7,28 @@ const parseMegabytes = (value: string | undefined, fallback: number) => {
   return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback
 }
 
-export const EMERGENCY_CHARGE_URL = (import.meta.env.VITE_EMERGENCY_CHARGE_URL || '').trim()
-export const EMERGENCY_CHARGE_MB = parseMegabytes(import.meta.env.VITE_EMERGENCY_CHARGE_MB, 500)
+// ":8765/emergency-charge" means "this page's host on port 8765", so one file works on any domain.
+const resolveServiceUrl = (value: string) =>
+  value.startsWith(':') && typeof window !== 'undefined'
+    ? `${window.location.protocol}//${window.location.hostname}${value}`
+    : value
+
+export const EMERGENCY_CHARGE_URL = resolveServiceUrl(
+  templateSetting('emergencyChargeUrl', import.meta.env.VITE_EMERGENCY_CHARGE_URL),
+)
+export const EMERGENCY_CHARGE_MB = parseMegabytes(
+  templateSetting('emergencyChargeMb', import.meta.env.VITE_EMERGENCY_CHARGE_MB),
+  500,
+)
 export const EMERGENCY_CHARGE_THRESHOLD_BYTES =
-  parseMegabytes(import.meta.env.VITE_EMERGENCY_CHARGE_THRESHOLD_MB, 500) * MB
-export const TELEGRAM_BOT_URL = (import.meta.env.VITE_TELEGRAM_BOT_URL || '').trim()
+  parseMegabytes(templateSetting('emergencyChargeThresholdMb', import.meta.env.VITE_EMERGENCY_CHARGE_THRESHOLD_MB), 500) *
+  MB
+export const TELEGRAM_BOT_URL = templateSetting('telegramBotUrl', import.meta.env.VITE_TELEGRAM_BOT_URL)
 // Hours of validity the service gives an expired user along with the traffic (EXPIRED_EXTEND_HOURS there).
-export const EMERGENCY_CHARGE_EXTEND_HOURS = parseMegabytes(import.meta.env.VITE_EMERGENCY_CHARGE_EXTEND_HOURS, 24)
+export const EMERGENCY_CHARGE_EXTEND_HOURS = parseMegabytes(
+  templateSetting('emergencyChargeExtendHours', import.meta.env.VITE_EMERGENCY_CHARGE_EXTEND_HOURS),
+  24,
+)
 
 export const isSubscriptionExpired = (status: string, expire: string | null | undefined) => {
   if (status === 'expired') return true

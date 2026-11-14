@@ -35,7 +35,7 @@ A responsive subscription page for the [PasarGuard](https://github.com/PasarGuar
 - One-click copy for links and configs; Base64 copy is only in the QR modal
 - WireGuard links can be copied as a native config or downloaded as `.conf`
 - Setup guide with one-tap import buttons for apps that support deep links (v2rayNG, Hiddify, Happ, Streisand, sing-box, Clash, FlClash)
-- Emergency charge card with a "buy from Telegram bot" button (optional)
+- Emergency charge card with a "buy from Telegram bot" button (optional), set up by the installer
 - Custom colors and border radius
 
 ## Compatibility
@@ -48,80 +48,55 @@ A responsive subscription page for the [PasarGuard](https://github.com/PasarGuar
 
 ## Install
 
-### Option 1: Quick install (release)
+Run this on the server where PasarGuard is installed:
 
 ```sh
 curl -fsSL https://raw.githubusercontent.com/imimz/subscription-template/main/install.sh | sudo bash -s -- --lang fa
 ```
 
-The script:
-- downloads the template from the latest release of this repository
+The installer asks a few questions and does the rest itself:
+
+1. **Page color**: `blue` (default) or `gold`.
+2. **Set up emergency charge?** If yes:
+   - **Telegram bot link** for the "buy" button (optional).
+   - **Relay or CDN?** Do users open subscription links through another domain, such as an Iran server? See [Emergency charge](#emergency-charge).
+   - **Panel API key**: create one in the panel under **API Keys**. It's checked against the panel and stored only on this server.
+
+Then it:
+- downloads the latest release and writes your settings into it (nothing is built on the server)
+- installs and starts the emergency charge service, if you chose it: it finds the panel's port, SSL certificate and subscription path in `/opt/pasarguard/.env`, opens the port in `ufw`, and restarts the service daily so it picks up renewed certificates
 - backs up the current template to `index.html.bak`
-- sets `CUSTOM_TEMPLATES_DIRECTORY` and `SUBSCRIPTION_PAGE_TEMPLATE` in `/opt/pasarguard/.env`
-- restarts the panel
-
-Options:
-- `--lang en|fa|zh|ru`: the default language of the page
-- `--version <tag>`: installs a specific release, for example `v2.3.0` (default: `latest`)
-- `--repo <owner>/<repo>`: installs from another repository
-
-> The quick install needs a published release in this repository. If it reports that it could not download the file, use option 2.
-
-### Option 2: Build from source (recommended when you use emergency charge)
-
-```sh
-# Bun needs unzip to install
-sudo apt update && sudo apt install -y unzip git
-curl -fsSL https://bun.sh/install | bash
-export PATH="$HOME/.bun/bin:$PATH"
-
-git clone https://github.com/imimz/subscription-template.git
-cd subscription-template
-cp .env.example .env
-nano .env        # set language, colors, Telegram bot and emergency charge (see below)
-
-bun install
-bun run build
-
-sudo mkdir -p /var/lib/pasarguard/templates/subscription
-sudo cp dist/index.html /var/lib/pasarguard/templates/subscription/index.html
-```
-
-Then add these lines to `/opt/pasarguard/.env` (skip if they are already there) and restart:
-
-```dotenv
-CUSTOM_TEMPLATES_DIRECTORY="/var/lib/pasarguard/templates/"
-SUBSCRIPTION_PAGE_TEMPLATE="subscription/index.html"
-```
-
-```sh
-pasarguard restart
-```
+- sets `CUSTOM_TEMPLATES_DIRECTORY` and `SUBSCRIPTION_PAGE_TEMPLATE` in `/opt/pasarguard/.env`, and restarts the panel
 
 Open any user's subscription link in a browser to see the new page.
+
+**Requirements:** PasarGuard installed with its official script (`/opt/pasarguard`, `/var/lib/pasarguard`), root access, and for emergency charge an SSL certificate on the panel and port `8765` reachable.
+
+**Options:**
+
+| Option | Description |
+| --- | --- |
+| `--lang en\|fa\|zh\|ru` | Default language of the page (default `fa`) |
+| `--emergency-charge yes\|no` | Skip the question |
+| `--relay yes\|no` | Users open links through a relay/CDN domain |
+| `--telegram-bot <url>` | Telegram bot link for the emergency charge card |
+| `--theme blue\|gold` | Page color |
+| `--charge-port <port>` | Port of the emergency charge service (default `8765`) |
+| `--version <tag>` | Install a specific release (default `latest`) |
+| `--repo <owner>/<repo>` | Install from another repository |
+
+For a fully non-interactive install, pass the API key in the environment:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/imimz/subscription-template/main/install.sh \
+  | sudo PANEL_API_KEY=your-key bash -s -- --lang fa --emergency-charge yes --relay no --theme gold
+```
 
 <a id="migrating"></a>
 
 ## Migrating from the original PasarGuard template
 
-If you already use the official template, your panel is already configured. The file path and the `.env` lines stay the same; you only replace `index.html`.
-
-1. Back up the current template:
-
-   ```sh
-   sudo cp /var/lib/pasarguard/templates/subscription/index.html \
-           /var/lib/pasarguard/templates/subscription/index.html.bak
-   ```
-
-2. Install the new template with [option 1 or option 2](#install). The quick install script makes the backup for you.
-
-3. Restart the panel:
-
-   ```sh
-   pasarguard restart
-   ```
-
-4. Optional: set up [emergency charge](#emergency-charge).
+Run the [install command](#install). It keeps a backup of your current template and reuses the panel settings that are already there.
 
 What changes for your users:
 - The **Apps** section is replaced by the **Apps & setup guide** section. Apps are now defined in the template (`src/constants/tutorials.ts`) instead of the panel's *Subscription → Applications* settings. Those panel settings are no longer shown on the page.
@@ -141,64 +116,71 @@ Or install the original again with `--repo PasarGuard/subscription-template`.
 
 ## Emergency Charge
 
-When a user is `limited` or has less than the threshold left, the page shows an emergency charge card. The button adds free traffic once per purchase period. A new period starts when the subscription is renewed: the expire date or data limit changes, or usage is reset.
+When a user is `limited`, expired, or has less than 500 MB left, the page shows an emergency charge card. The button adds 500 MB once per purchase period; expired users also get 24 hours of validity. A new period starts when the subscription is renewed: the expire date or data limit changes, or usage is reset.
 
-The page cannot change a data limit by itself, because that needs admin access. A small service in [`emergency-charge/`](emergency-charge/README.md) does it. The service runs next to the panel, checks the user through their subscription token, and keeps the admin credential on the server.
+The page can't change a data limit by itself, because that needs admin access. A small service in [`emergency-charge/`](emergency-charge/README.md) does it. It runs next to the panel, checks the user through their subscription token, and keeps the API key on the server. **The installer sets all of this up** when you answer "yes".
 
-1. Install and configure the service by following [emergency-charge/README.md](emergency-charge/README.md). It is a single Python file with no dependencies, and comes with a systemd unit.
-2. Set these in the template's `.env` and build again (option 2):
+- **Users open links directly on the panel's domain** (answer "no" to the relay question): the page calls the service on the same domain, port `8765`.
+- **Users open links through a relay or CDN** (answer "yes"): the page calls `/emergency-charge` on the relay's domain, and the relay forwards it to the panel server. At the end, the installer prints the exact line to add on the relay. For [sub-forward-proxy](https://github.com/imimz/sub-forward-proxy) it looks like this:
 
-   ```dotenv
-   VITE_EMERGENCY_CHARGE_URL=https://panel.example.com:8765/emergency-charge
-   VITE_EMERGENCY_CHARGE_MB=500
-   VITE_EMERGENCY_CHARGE_THRESHOLD_MB=500
-   VITE_TELEGRAM_BOT_URL=https://t.me/your_bot
-   ```
+  ```php
+  'routes' => ['#^/emergency-charge/?$#' => 'https://PANEL-IP:8765'],
+  ```
 
-   Keep `VITE_EMERGENCY_CHARGE_MB` and `VITE_EMERGENCY_CHARGE_THRESHOLD_MB` equal to the service's `CHARGE_MB` and `LOW_TRAFFIC_THRESHOLD_MB` (and `VITE_EMERGENCY_CHARGE_EXTEND_HOURS` to `EXPIRED_EXTEND_HOURS`, default 24). Expired users get that many hours of validity along with the traffic. If `VITE_EMERGENCY_CHARGE_URL` is empty, the card is hidden. `VITE_TELEGRAM_BOT_URL` adds the "buy from Telegram bot" button.
+  After adding it, run `systemctl restart rh-subproxy`.
+
+To change anything later (turn it off, change the bot link or the API key), run the installer again. Manual setup and every option of the service are described in [emergency-charge/README.md](emergency-charge/README.md).
 
 <a id="customization"></a>
 
 ## Customization
 
-All settings go in `.env` and take effect after `bun run build`. See [`.env.example`](.env.example).
+**Apps and tutorials:** edit [`src/constants/tutorials.ts`](src/constants/tutorials.ts) to add or remove apps, change download links, or rewrite the steps. Text is written in Persian and English; other languages fall back to English. Wrap button and menu names in backticks (`` `Update subscription` ``) to highlight them. Then [build from source](#build-from-source).
+
+**Other colors and sizes:** these come from `.env` at build time (see [`.env.example`](.env.example)):
 
 | Variable | Description |
 | --- | --- |
 | `VITE_FALLBACK_LANGUAGE` | Default language: `en`, `fa`, `zh`, `ru` |
-| `VITE_PRIMARY_COLOR_LIGHT` / `VITE_PRIMARY_COLOR_DARK` | Main color for the light and dark themes. The gold theme in the screenshots is `oklch(0.62 0.13 75)` / `oklch(0.80 0.14 85)` |
+| `VITE_PRIMARY_COLOR_LIGHT` / `VITE_PRIMARY_COLOR_DARK` | Main color for the light and dark themes |
 | `VITE_BORDER_RADIUS` | Corner radius, for example `0.65rem` |
-| `VITE_TELEGRAM_BOT_URL` | Telegram bot link shown on the emergency charge card |
-| `VITE_EMERGENCY_CHARGE_*` | See [Emergency charge](#emergency-charge) |
 
-**Apps and tutorials:** edit [`src/constants/tutorials.ts`](src/constants/tutorials.ts) to add or remove apps, change download links, or rewrite the steps. Text is written in Persian and English; other languages fall back to English. Wrap button and menu names in backticks (`` `Update subscription` ``) to highlight them.
+Settings written by the installer (theme, emergency charge, Telegram bot) take priority over these.
+
+<a id="build-from-source"></a>
+
+### Build from source
+
+```sh
+sudo apt update && sudo apt install -y unzip git
+curl -fsSL https://bun.sh/install | bash
+export PATH="$HOME/.bun/bin:$PATH"
+
+git clone https://github.com/imimz/subscription-template.git
+cd subscription-template
+cp .env.example .env && nano .env
+bun install && bun run build
+sudo cp dist/index.html /var/lib/pasarguard/templates/subscription/index.html
+```
+
+On servers with little memory, the build can be killed; add swap first (`fallocate -l 2G /swapfile && chmod 600 /swapfile && mkswap /swapfile && swapon /swapfile`).
 
 <a id="updating"></a>
 
 ## Updating
 
-- **Quick install:** run the same `install.sh` command again.
-- **Build from source:**
-
-  ```sh
-  cd subscription-template
-  git pull
-  export PATH="$HOME/.bun/bin:$PATH"
-  bun install && bun run build
-  sudo cp dist/index.html /var/lib/pasarguard/templates/subscription/index.html
-  ```
-
-  Your `.env` is not tracked by git, so it survives updates.
+Run the [install command](#install) again. It remembers your previous answers and API key, so it doesn't ask again, and it updates both the page and the emergency charge service.
 
 <a id="publishing"></a>
 
 ## Publishing a release (repository owner)
 
-A GitHub Actions workflow builds one file per language and attaches them to every published release. `install.sh` downloads those files.
+A GitHub Actions workflow builds one file per language and attaches them to every published release. The installer downloads those files.
 
-1. Optional: to include emergency charge, the Telegram button or custom colors in release builds, add repository variables. Go to **Settings → Secrets and variables → Actions → Variables** and set any of: `VITE_EMERGENCY_CHARGE_URL`, `VITE_EMERGENCY_CHARGE_MB`, `VITE_EMERGENCY_CHARGE_THRESHOLD_MB`, `VITE_TELEGRAM_BOT_URL`, `VITE_PRIMARY_COLOR_LIGHT`, `VITE_PRIMARY_COLOR_DARK`, `VITE_BORDER_RADIUS`.
-2. Go to **Releases → Draft a new release**, create a tag such as `v2.3.0`, and click **Publish release**.
-3. Wait for the **Release** workflow to finish. The release then contains `index.html` (Persian default) and `en.html`, `fa.html`, `ru.html`, `zh.html`.
+1. Go to **Releases → Draft a new release**, create a new tag (for example `v2.4.0`), and click **Publish release**.
+2. Wait for the **Release** workflow in the **Actions** tab to finish. The release then contains `index.html` (Persian default) and `en.html`, `fa.html`, `ru.html`, `zh.html`.
+
+On a fork, enable Actions first: open the **Actions** tab and confirm. Don't put `VITE_EMERGENCY_CHARGE_URL` or `VITE_TELEGRAM_BOT_URL` in the repository variables: everything there ends up in the files everyone downloads.
 
 ## Other Languages
 

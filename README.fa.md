@@ -37,7 +37,7 @@
 - کپی لینک و کانفیگ با یک کلیک. کپی Base64 فقط در مودال QR هست.
 - لینک‌های WireGuard هم به صورت کانفیگ اصلی کپی می‌شوند و هم با فرمت `.conf` دانلود
 - آموزش اتصال با دکمه‌ی «افزودن خودکار» برای برنامه‌هایی که از آن پشتیبانی می‌کنند (v2rayNG، Hiddify، Happ، Streisand، sing-box، Clash، FlClash)
-- کارت شارژ اضطراری و دکمه‌ی «خرید از ربات تلگرام» (اختیاری)
+- کارت شارژ اضطراری و دکمه‌ی «خرید از ربات تلگرام» (اختیاری؛ اسکریپت نصب راهش می‌اندازد)
 - رنگ و گردی گوشه‌های قابل تنظیم
 
 <a id="compatibility"></a>
@@ -52,80 +52,62 @@
 
 ## نصب
 
-### روش ۱: نصب سریع (Release)
+این دستور را روی سروری که PasarGuard روی آن نصب است اجرا کنید:
 
 ```sh
 curl -fsSL https://raw.githubusercontent.com/imimz/subscription-template/main/install.sh | sudo bash -s -- --lang fa
 ```
 
-این اسکریپت:
-- قالب را از آخرین Release این مخزن دانلود می‌کند
-- از قالب فعلی نسخه‌ی پشتیبان `index.html.bak` می‌سازد
-- `CUSTOM_TEMPLATES_DIRECTORY` و `SUBSCRIPTION_PAGE_TEMPLATE` را در `/opt/pasarguard/.env` تنظیم می‌کند
-- پنل را ری‌استارت می‌کند
+اسکریپت چند سؤال می‌پرسد و بقیه‌ی کارها را خودش انجام می‌دهد:
 
-گزینه‌ها:
-- `--lang en|fa|zh|ru`: زبان پیش‌فرض صفحه
-- `--version <tag>`: نصب یک نسخه‌ی مشخص، مثلاً `v2.3.0` (پیش‌فرض `latest`)
-- `--repo <owner>/<repo>`: نصب از یک مخزن دیگر
+۱. **رنگ صفحه:** `blue` (آبی، پیش‌فرض) یا `gold` (طلایی).
 
-> نصب سریع فقط وقتی کار می‌کند که در این مخزن یک Release منتشر شده باشد. اگر اسکریپت خطای دانلود داد، از روش ۲ استفاده کنید.
+۲. **شارژ اضطراری نصب شود؟** اگر جواب بله باشد:
+   - **لینک ربات تلگرام** برای دکمه‌ی «خرید» (اختیاری)
+   - **رله یا CDN:** آیا کاربرها لینک اشتراک را از دامنه‌ی دیگری (مثلاً سرور ایران) باز می‌کنند؟ بخش [شارژ اضطراری](#emergency-charge) را ببینید.
+   - **API Key پنل:** در پنل از بخش **API Keys** یک کلید بسازید. اسکریپت کلید را با پنل امتحان می‌کند و فقط روی همین سرور ذخیره‌اش می‌کند.
 
-### روش ۲: ساخت از سورس (پیشنهادی برای استفاده از شارژ اضطراری)
-
-```sh
-# Bun برای نصب به unzip نیاز دارد
-sudo apt update && sudo apt install -y unzip git
-curl -fsSL https://bun.sh/install | bash
-export PATH="$HOME/.bun/bin:$PATH"
-
-git clone https://github.com/imimz/subscription-template.git
-cd subscription-template
-cp .env.example .env
-nano .env        # زبان، رنگ، ربات تلگرام و شارژ اضطراری را تنظیم کنید (پایین را ببینید)
-
-bun install
-bun run build
-
-sudo mkdir -p /var/lib/pasarguard/templates/subscription
-sudo cp dist/index.html /var/lib/pasarguard/templates/subscription/index.html
-```
-
-سپس این دو خط را به `/opt/pasarguard/.env` اضافه کنید (اگر قبلاً اضافه شده‌اند، لازم نیست) و پنل را ری‌استارت کنید:
-
-```dotenv
-CUSTOM_TEMPLATES_DIRECTORY="/var/lib/pasarguard/templates/"
-SUBSCRIPTION_PAGE_TEMPLATE="subscription/index.html"
-```
-
-```sh
-pasarguard restart
-```
+بعد از جواب دادن، اسکریپت:
+- آخرین نسخه‌ی قالب را دانلود می‌کند و تنظیمات شما را داخلش می‌نویسد. نیازی به build روی سرور نیست.
+- اگر شارژ اضطراری را انتخاب کرده باشید، سرویسش را نصب و اجرا می‌کند:
+  - پورت پنل، گواهی SSL و مسیر اشتراک را خودش از `/opt/pasarguard/.env` پیدا می‌کند.
+  - پورت را در `ufw` باز می‌کند.
+  - هر روز سرویس را ری‌استارت می‌کند تا گواهی تمدیدشده را بخواند.
+- از قالب فعلی نسخه‌ی پشتیبان `index.html.bak` می‌سازد.
+- `CUSTOM_TEMPLATES_DIRECTORY` و `SUBSCRIPTION_PAGE_TEMPLATE` را در `/opt/pasarguard/.env` تنظیم می‌کند و پنل را ری‌استارت می‌کند.
 
 حالا لینک اشتراک یکی از کاربران را در مرورگر باز کنید تا صفحه‌ی جدید را ببینید.
+
+**پیش‌نیازها:**
+- PasarGuard با اسکریپت رسمی نصب شده باشد (`/opt/pasarguard` و `/var/lib/pasarguard`).
+- دسترسی root داشته باشید.
+- برای شارژ اضطراری: پنل گواهی SSL داشته باشد و پورت `8765` از بیرون در دسترس باشد.
+
+**گزینه‌ها:**
+
+| گزینه | توضیح |
+| --- | --- |
+| `--lang en\|fa\|zh\|ru` | زبان پیش‌فرض صفحه (پیش‌فرض `fa`) |
+| `--emergency-charge yes\|no` | بدون پرسیدن، شارژ اضطراری نصب شود یا نه |
+| `--relay yes\|no` | کاربرها لینک را از دامنه‌ی رله یا CDN باز می‌کنند |
+| `--telegram-bot <url>` | لینک ربات تلگرام روی کارت شارژ اضطراری |
+| `--theme blue\|gold` | رنگ صفحه |
+| `--charge-port <port>` | پورت سرویس شارژ اضطراری (پیش‌فرض `8765`) |
+| `--version <tag>` | نصب یک نسخه‌ی مشخص (پیش‌فرض `latest`) |
+| `--repo <owner>/<repo>` | نصب از یک مخزن دیگر |
+
+برای نصب کاملاً بدون سؤال، API Key را در محیط بدهید:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/imimz/subscription-template/main/install.sh \
+  | sudo PANEL_API_KEY=your-key bash -s -- --lang fa --emergency-charge yes --relay no --theme gold
+```
 
 <a id="migrating"></a>
 
 ## مهاجرت از قالب اصلی PasarGuard
 
-اگر الان از قالب رسمی PasarGuard استفاده می‌کنید، پنل شما از قبل تنظیم شده است. مسیر فایل و خطوط `.env` تغییری نمی‌کنند و فقط فایل `index.html` عوض می‌شود.
-
-۱. از قالب فعلی نسخه‌ی پشتیبان بگیرید:
-
-```sh
-sudo cp /var/lib/pasarguard/templates/subscription/index.html \
-        /var/lib/pasarguard/templates/subscription/index.html.bak
-```
-
-۲. قالب جدید را با [روش ۱ یا روش ۲](#install) نصب کنید. اسکریپت نصب سریع نسخه‌ی پشتیبان را خودش می‌سازد.
-
-۳. پنل را ری‌استارت کنید:
-
-```sh
-pasarguard restart
-```
-
-۴. (اختیاری) [شارژ اضطراری](#emergency-charge) را راه‌اندازی کنید.
+همان [دستور نصب](#install) را اجرا کنید. اسکریپت از قالب فعلی نسخه‌ی پشتیبان می‌گیرد و از تنظیماتی که پنل از قبل دارد استفاده می‌کند.
 
 **برای کاربران چه چیزی تغییر می‌کند؟**
 - بخش «اپلیکیشن‌ها» جای خود را به «برنامه‌ها و آموزش اتصال» می‌دهد.
@@ -146,70 +128,87 @@ pasarguard restart
 
 ## شارژ اضطراری
 
-وقتی وضعیت کاربر `limited` باشد یا حجم باقی‌مانده‌اش کمتر از حد تعیین‌شده باشد، کارت شارژ اضطراری نمایش داده می‌شود. کاربر با زدن دکمه، در هر دوره‌ی خرید یک بار حجم رایگان می‌گیرد. دوره‌ی جدید وقتی شروع می‌شود که سرویس تمدید شود، یعنی تاریخ انقضا یا حجم کل تغییر کند یا حجم مصرفی ریست شود.
+کارت شارژ اضطراری برای کاربری نمایش داده می‌شود که وضعیتش `limited` است، منقضی شده، یا کمتر از ۵۰۰ مگابایت حجم دارد.
+- با زدن دکمه، در هر دوره‌ی خرید یک بار ۵۰۰ مگابایت حجم رایگان می‌گیرد.
+- کاربر منقضی‌شده علاوه بر حجم، ۲۴ ساعت اعتبار هم می‌گیرد.
+- دوره‌ی جدید وقتی شروع می‌شود که سرویس تمدید شود، یعنی تاریخ انقضا یا حجم کل تغییر کند یا حجم مصرفی ریست شود.
 
-صفحه‌ی اشتراک خودش نمی‌تواند حجم کاربر را تغییر دهد، چون این کار دسترسی ادمین لازم دارد. این کار را یک سرویس کوچک در پوشه‌ی [`emergency-charge/`](emergency-charge/README.md) انجام می‌دهد. این سرویس کنار پنل اجرا می‌شود، کاربر را از روی توکن لینک اشتراکش شناسایی می‌کند و اطلاعات ادمین فقط روی سرور می‌ماند.
+صفحه‌ی اشتراک خودش نمی‌تواند حجم را تغییر دهد، چون این کار دسترسی ادمین می‌خواهد. این کار را یک سرویس کوچک در پوشه‌ی [`emergency-charge/`](emergency-charge/README.md) انجام می‌دهد. این سرویس کنار پنل اجرا می‌شود، کاربر را از روی توکن لینک اشتراکش شناسایی می‌کند و API Key فقط روی سرور می‌ماند. **اگر به سؤال شارژ اضطراری جواب «بله» بدهید، اسکریپت نصب همه‌ی این‌ها را خودش راه می‌اندازد.**
 
-۱. سرویس را طبق [emergency-charge/README.md](emergency-charge/README.md) نصب و تنظیم کنید. این سرویس یک فایل پایتون بدون نیاز به نصب پکیج است و فایل systemd آماده دارد.
+دو حالت دارد:
 
-۲. این مقادیر را در `.env` قالب قرار دهید و دوباره build بگیرید (روش ۲):
+**۱. کاربرها لینک را مستقیم با دامنه‌ی پنل باز می‌کنند** (به سؤال رله جواب «نه» بدهید). صفحه، سرویس را روی همان دامنه و پورت `8765` صدا می‌زند.
 
-```dotenv
-VITE_EMERGENCY_CHARGE_URL=https://panel.example.com:8765/emergency-charge
-VITE_EMERGENCY_CHARGE_MB=500
-VITE_EMERGENCY_CHARGE_THRESHOLD_MB=500
-VITE_TELEGRAM_BOT_URL=https://t.me/your_bot
+**۲. کاربرها لینک را از طریق رله یا CDN باز می‌کنند** (به سؤال رله جواب «بله» بدهید). صفحه، آدرس `/emergency-charge` را روی دامنه‌ی رله صدا می‌زند و رله آن را به سرور پنل می‌فرستد. اسکریپت در پایان دقیقاً همان خطی را که باید روی رله اضافه کنید چاپ می‌کند. برای [sub-forward-proxy](https://github.com/imimz/sub-forward-proxy) این شکلی است:
+
+```php
+'routes' => ['#^/emergency-charge/?$#' => 'https://PANEL-IP:8765'],
 ```
 
-- `VITE_EMERGENCY_CHARGE_MB` و `VITE_EMERGENCY_CHARGE_THRESHOLD_MB` را برابر با `CHARGE_MB` و `LOW_TRAFFIC_THRESHOLD_MB` سرویس بگذارید. کاربر منقضی‌شده علاوه بر حجم، `EXPIRED_EXTEND_HOURS` ساعت (پیش‌فرض ۲۴) اعتبار هم می‌گیرد؛ اگر این عدد را عوض کردید، `VITE_EMERGENCY_CHARGE_EXTEND_HOURS` را هم برابرش بگذارید.
-- اگر `VITE_EMERGENCY_CHARGE_URL` خالی باشد، کارت شارژ نمایش داده نمی‌شود.
-- `VITE_TELEGRAM_BOT_URL` دکمه‌ی «خرید از ربات تلگرام» را اضافه می‌کند.
+بعد از اضافه کردن این خط، `systemctl restart rh-subproxy` را بزنید.
+
+برای تغییر هر تنظیمی در آینده (خاموش کردن، عوض کردن لینک ربات یا API Key)، اسکریپت نصب را دوباره اجرا کنید. نصب دستی و همه‌ی تنظیمات سرویس در [emergency-charge/README.md](emergency-charge/README.md) توضیح داده شده است.
 
 <a id="customization"></a>
 
 ## شخصی‌سازی
 
-همه‌ی تنظیمات در فایل `.env` قرار می‌گیرند و بعد از `bun run build` اعمال می‌شوند. نمونه‌ی کامل در [`.env.example`](.env.example) است.
+**برنامه‌ها و آموزش‌ها:**
+- برای اضافه یا حذف کردن برنامه، تغییر لینک دانلود یا ویرایش مراحل آموزش، فایل [`src/constants/tutorials.ts`](src/constants/tutorials.ts) را ویرایش کنید و بعد قالب را [از سورس build کنید](#build-from-source).
+- متن‌ها به فارسی و انگلیسی هستند و زبان‌های دیگر از متن انگلیسی استفاده می‌کنند.
+- اسم دکمه‌ها و منوها را داخل backtick بنویسید (مثلاً `` `Update subscription` ``) تا برجسته نمایش داده شوند.
+
+**رنگ و اندازه‌های دیگر:** این مقادیر هنگام build از `.env` خوانده می‌شوند (نمونه در [`.env.example`](.env.example)):
 
 | متغیر | توضیح |
 | --- | --- |
 | `VITE_FALLBACK_LANGUAGE` | زبان پیش‌فرض: `fa`، `en`، `ru` یا `zh` |
-| `VITE_PRIMARY_COLOR_LIGHT` / `VITE_PRIMARY_COLOR_DARK` | رنگ اصلی در تم روشن و تیره. رنگ طلایی تصاویر بالا `oklch(0.62 0.13 75)` / `oklch(0.80 0.14 85)` است. |
+| `VITE_PRIMARY_COLOR_LIGHT` / `VITE_PRIMARY_COLOR_DARK` | رنگ اصلی در تم روشن و تیره |
 | `VITE_BORDER_RADIUS` | گردی گوشه‌ها، مثلاً `0.65rem` |
-| `VITE_TELEGRAM_BOT_URL` | لینک ربات تلگرام روی کارت شارژ اضطراری |
-| `VITE_EMERGENCY_CHARGE_*` | بخش [شارژ اضطراری](#emergency-charge) را ببینید |
 
-**برنامه‌ها و آموزش‌ها:** برای اضافه یا حذف کردن برنامه، تغییر لینک دانلود یا ویرایش مراحل آموزش، فایل [`src/constants/tutorials.ts`](src/constants/tutorials.ts) را ویرایش کنید. متن‌ها به فارسی و انگلیسی هستند و زبان‌های دیگر از متن انگلیسی استفاده می‌کنند. اسم دکمه‌ها و منوها را داخل backtick بنویسید (مثلاً `` `Update subscription` ``) تا برجسته نمایش داده شوند.
+تنظیماتی که اسکریپت نصب می‌نویسد (رنگ، شارژ اضطراری و ربات تلگرام) بر این مقادیر اولویت دارند.
+
+<a id="build-from-source"></a>
+
+### ساخت از سورس
+
+```sh
+sudo apt update && sudo apt install -y unzip git
+curl -fsSL https://bun.sh/install | bash
+export PATH="$HOME/.bun/bin:$PATH"
+
+git clone https://github.com/imimz/subscription-template.git
+cd subscription-template
+cp .env.example .env && nano .env
+bun install && bun run build
+sudo cp dist/index.html /var/lib/pasarguard/templates/subscription/index.html
+```
+
+اگر رم سرور کم باشد، ممکن است build وسط کار متوقف شود (`Killed`). در این صورت قبل از build یک swap بسازید:
+
+```sh
+fallocate -l 2G /swapfile && chmod 600 /swapfile && mkswap /swapfile && swapon /swapfile
+```
 
 <a id="updating"></a>
 
 ## به‌روزرسانی
 
-**نصب سریع:** همان دستور `install.sh` را دوباره اجرا کنید.
-
-**ساخت از سورس:**
-
-```sh
-cd subscription-template
-git pull
-export PATH="$HOME/.bun/bin:$PATH"
-bun install && bun run build
-sudo cp dist/index.html /var/lib/pasarguard/templates/subscription/index.html
-```
-
-فایل `.env` شما در گیت ذخیره نمی‌شود، پس با `git pull` پاک نمی‌شود.
+[دستور نصب](#install) را دوباره اجرا کنید. اسکریپت جواب‌های قبلی و API Key را به خاطر دارد، پس دوباره سؤال نمی‌پرسد. هم صفحه و هم سرویس شارژ اضطراری را به‌روز می‌کند.
 
 <a id="publishing"></a>
 
 ## انتشار نسخه (برای صاحب مخزن)
 
-با انتشار هر Release، یک GitHub Actions برای هر زبان یک فایل می‌سازد و آن‌ها را به Release اضافه می‌کند. `install.sh` همین فایل‌ها را دانلود می‌کند.
+با انتشار هر Release، یک GitHub Actions برای هر زبان یک فایل می‌سازد و آن‌ها را به Release اضافه می‌کند. اسکریپت نصب همین فایل‌ها را دانلود می‌کند.
 
-۱. (اختیاری) برای اینکه شارژ اضطراری، دکمه‌ی تلگرام یا رنگ دلخواه در نسخه‌ی Release هم باشد، متغیرها را به مخزن اضافه کنید. مسیر: **Settings → Secrets and variables → Actions → Variables**. هر کدام از این متغیرها را که لازم دارید اضافه کنید: `VITE_EMERGENCY_CHARGE_URL`، `VITE_EMERGENCY_CHARGE_MB`، `VITE_EMERGENCY_CHARGE_THRESHOLD_MB`، `VITE_TELEGRAM_BOT_URL`، `VITE_PRIMARY_COLOR_LIGHT`، `VITE_PRIMARY_COLOR_DARK`، `VITE_BORDER_RADIUS`.
+۱. به **Releases → Draft a new release** بروید، یک تگ جدید (مثلاً `v2.4.0`) بسازید و **Publish release** را بزنید.
 
-۲. به **Releases → Draft a new release** بروید، یک تگ مثل `v2.3.0` بسازید و **Publish release** را بزنید.
+۲. صبر کنید تا workflow با نام **Release** در تب **Actions** تمام شود. بعد از آن، Release شامل `index.html` (پیش‌فرض فارسی) و `en.html`، `fa.html`، `ru.html` و `zh.html` است.
 
-۳. صبر کنید تا workflow با نام **Release** تمام شود. بعد از آن، Release شامل `index.html` (پیش‌فرض فارسی) و `en.html`، `fa.html`، `ru.html` و `zh.html` است.
+**نکته‌ها:**
+- در مخزن fork‌شده، اول تب **Actions** را باز کنید و آن را فعال کنید.
+- `VITE_EMERGENCY_CHARGE_URL` و `VITE_TELEGRAM_BOT_URL` را در Variables مخزن نگذارید، چون هر چیزی که آنجا باشد داخل فایلی می‌رود که همه دانلود می‌کنند.
 
 ## زبان‌های دیگر
 
