@@ -31,7 +31,7 @@ sudo journalctl -u emergency-charge -f   # مشاهده لاگ
 
 | متغیر | توضیح |
 | --- | --- |
-| `PANEL_URL` | آدرس پنل، مثلاً `https://panel.example.com:8000` |
+| `PANEL_URL` | آدرس پنل، مثلاً `https://panel.example.com:8000`. اگر سرویس روی همان سرور پنل است، آدرس داخلی (مثلاً `https://127.0.0.1:8000` با پورت پنل) را بگذارید و `PANEL_VERIFY_TLS=false` کنید؛ اتصال از راه دامنه و IP عمومی ممکن است با خطای SSL قطع شود |
 | `SUB_PATH` | مسیر لینک اشتراک در پنل (پیش‌فرض `sub`) |
 | `PANEL_API_KEY` | کلید API ادمین (از بخش API Keys پنل)، **یا** |
 | `PANEL_ADMIN_USERNAME` / `PANEL_ADMIN_PASSWORD` | نام کاربری و رمز یک ادمین که اجازه خواندن و ویرایش کاربران را دارد |
